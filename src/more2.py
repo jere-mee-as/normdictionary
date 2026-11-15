@@ -136,7 +136,7 @@ MORE2 = [
     ]),
   ]),
 ]),
-('Being late', '⌛', [
+('Being late', '◷', [
   ('By who’s waiting', [
     ('On whom', 'Said: “Be on time. Other people’s time matters.”', [
       ('expected', 'You, thirty minutes late, to a house party.'),
