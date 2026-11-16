@@ -24,7 +24,7 @@ MORE2 = [
     ]),
   ]),
 ]),
-('Showing', '◯', [
+('Showing', '○', [
   ('Skin', [
     ('In public', '', [
       ('expected', 'A swimmer, in a Speedo, at the Olympics.'),
@@ -64,7 +64,7 @@ MORE2 = [
     ]),
   ]),
 ]),
-('Breaking', '⚠', [
+('Breaking', '÷', [
   ('A promise', [
     ('Once it’s inconvenient', 'Said: “A promise is a promise.”', [
       ('fine', 'Cancelling dinner plans, because you’re tired.'),

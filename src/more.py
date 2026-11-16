@@ -109,7 +109,7 @@ MORE = [
     ]),
   ]),
 ]),
-('Showing', '◯', [
+('Showing', '○', [
   ('Wealth', [
     ('Where people can see', 'Said: “Don’t flaunt it.”', [
       ('admired', 'A sports car, if you built the company.'),
@@ -362,7 +362,7 @@ MORE = [
     ]),
   ]),
 ]),
-('Breaking', '⚠', [
+('Breaking', '÷', [
   ('The law', [
     ('A little', 'Said: “The law is the law.”', [
       ('expected', 'Nine over the speed limit.'),

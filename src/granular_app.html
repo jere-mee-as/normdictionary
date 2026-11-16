@@ -92,6 +92,29 @@ main{max-width:1120px;margin:0 auto;padding:30px 32px 140px}
 .mnote{color:var(--dim);font-size:14px;font-style:italic;margin-top:14px}
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;font-size:13px;color:var(--dim)}
 .legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:12px;height:12px;border-radius:2px;background:var(--vc);display:inline-block}
+/* people */
+.pkey{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--dim);margin:8px 0 22px}
+.pkey span{display:inline-flex;align-items:center;gap:6px}.pkey i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.pkey .g i,.pb .g{background:var(--pg)}.pkey .o i,.pb .o{background:var(--po)}.pkey .r i,.pb .r{background:var(--pr)}
+:root{--pg:#5d8a1f;--po:#c2560f;--pr:#b5231e}
+:is([data-theme=night],[data-theme=ink],[data-theme=slate],[data-theme=phosphor]){--pg:#9cd35d;--po:#f0a646;--pr:#ee4a4a}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){--pg:#9cd35d;--po:#f0a646;--pr:#ee4a4a}}
+.plist{list-style:none;padding:0;margin:0;counter-reset:p}
+.plist li{display:grid;grid-template-columns:2.4em minmax(9em,15em) 1fr 7.5em;gap:12px;align-items:center;padding:6px 0;border-bottom:1px solid var(--faint);cursor:pointer}
+.plist li:hover .pn{color:var(--ink)}
+.plist .pr{color:var(--dim);font-size:13px;text-align:right}.plist .pn{font-size:17px;color:var(--ink)}
+.pb{display:flex;height:12px;border-radius:2px;overflow:hidden;background:var(--faint)}.pb span{height:100%;transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.plist .pp{font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums;text-align:right}
+.pmore{margin-top:16px;color:var(--dim);font-size:14px}.pmore:hover{color:var(--ink)}
+.pyou{margin:0 0 26px;padding:16px 0;border-top:1px solid var(--faint);border-bottom:1px solid var(--faint)}
+.pyl{font-size:14px;color:var(--dim);margin-bottom:10px}
+#pDet{margin-top:8px}
+.pcard{margin-top:16px;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;align-items:center}
+.pcard .pcn{grid-column:1 / -1;font-size:clamp(22px,2.8vw,30px)}
+.pcard .pcl{font-size:13.5px;color:var(--dim);text-align:right}
+.pcard .pcb{display:flex;flex-direction:column;gap:4px}.pcard .pcs{font-size:13.5px;color:var(--dim)}
+.pcard .pcx{grid-column:1 / -1;font-size:15px;color:var(--dim);line-height:1.5}
+@media (max-width:760px){.plist li{grid-template-columns:2em 1fr 6.5em;}.plist li .pb{grid-column:2 / -1;grid-row:2}}
 /* web */
 .towebb{color:var(--ink)!important;border-bottom:1px solid var(--dim)}
 .wtop{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font-size:14px;margin-bottom:12px}
@@ -118,7 +141,7 @@ main{max-width:1120px;margin:0 auto;padding:30px 32px 140px}
   .foot{left:0;right:0;bottom:0;border-radius:0;padding:11px 20px calc(11px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--faint)}.credit{bottom:8px;right:12px;background:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><main>
-<div class="bar" role="toolbar"><button class="tab" id="tB" aria-pressed="true">build</button><span>·</span><button class="tab" id="tC" aria-pressed="false">cryptex</button><span>·</span><button class="tab" id="tM" aria-pressed="false">map</button><span>·</span><button class="tab" id="tW" aria-pressed="false">web</button>
+<div class="bar" role="toolbar"><button class="tab" id="tB" aria-pressed="true">build</button><span>·</span><button class="tab" id="tC" aria-pressed="false">cryptex</button><span>·</span><button class="tab" id="tM" aria-pressed="false">map</button><span>·</span><button class="tab" id="tW" aria-pressed="false">web</button><span>·</span><button class="tab" id="tP" aria-pressed="false">people</button>
   <span class="sp"></span><button class="ic" id="reset">↺<span class="lg"> start over</span></button><button class="ic" id="snd" title="Sound">sound</button><button class="ic" id="thm" title="Theme">theme</button></div>
 
 <section id="B">
@@ -144,6 +167,16 @@ main{max-width:1120px;margin:0 auto;padding:30px 32px 140px}
   <div class="wbox" id="wbox"><canvas id="wc"></canvas><div class="wmsg" id="wmsg">weaving the web…</div>
     <div class="wzoom"><button id="wzi" aria-label="Zoom in">+</button><button id="wzo" aria-label="Zoom out">−</button><button id="wfit">all</button></div></div>
   <div class="winfo" id="winfo"></div>
+</section>
+
+<section id="P" hidden>
+  <div class="mapc">Who gets away with the most? Ranked by how it goes when they’re <select id="pSide"><option value="d">doing it</option><option value="t">on the receiving end</option></select>,
+    most <select id="pBy"><option value="g">green</option><option value="o">orange</option><option value="r">red</option></select> first, among <select id="pAmong"><option value="all">everyone</option><option value="grown">grown-ups</option><option value="kids">kids</option></select>, judged by <select id="pJ"></select>.</div>
+  <div class="pkey"><span class="g"><i></i>fine and better</span><span class="o"><i></i>eyebrows to frowned on</span><span class="r"><i></i>not okay and illegal</span></div>
+  <div class="pyou"><div class="pyl">Or pick someone:</div><div class="chips" id="pPick"></div><div class="chips" id="pDet"></div><div id="pCard"></div></div>
+  <ol class="plist" id="pList"></ol>
+  <button class="pmore" id="pMore">show everyone</button>
+  <p class="hint" id="pNote"></p>
 </section>
 
 <section id="M" hidden>
@@ -773,6 +806,64 @@ function drawMap(){
 ['mAct','mDim','mJ'].forEach(id => $(id).onchange = drawMap);
 
 
+// ---------- people: who gets away with the most ----------
+// Every kind of person (age and sex, plus at most one detail), run through every act against every plain counterpart.
+const PEOPLE = (() => {
+  const profiles = [];
+  for(const age of AGE) for(const sex of SEX){ const base = blankP(age, sex); profiles.push(base);
+    for(const dm of DIMS) if(dimOk(dm.k, base)) for(const v of dm.vals) profiles.push({...base, [dm.k]: v}); }
+  const plain = AGE.flatMap(a => SEX.map(x => blankP(a, x)));
+  const cache = {};
+  const bucket = v => v <= 2 ? 'g' : v <= 6 ? 'o' : 'r';
+  function score(p, side, j){
+    const c = {g:0, o:0, r:0, n:0};
+    ACTS.forEach(a => { const need = a.need || {};
+      for(const q of plain){
+        let d, t;
+        if(side === 'd'){ d = p; t = {...q}; if(need.tAge === 'minor' && !minor(t)) continue; if(need.t){ if(!dimOk(need.t, t)) continue; for(const v of DK[need.t].vals){ const tv = {...t, [need.t]: v}; c[bucket(judge(a, d, tv, j).v)]++; c.n++; } continue; } }
+        else { t = p; d = q; if(need.tAge === 'minor' && !minor(t)) return; if(need.t && t[need.t] == null) return; }
+        c[bucket(judge(a, d, t, j).v)]++; c.n++;
+      } });
+    return c;
+  }
+  function all(side, j){ const k = side + j; if(!cache[k]) cache[k] = profiles.map(p => ({p, ...score(p, side, j)})); return cache[k]; }
+  return {profiles, score, all};
+})();
+let PS = {side:'d', by:'g', among:'all', j:0, more:false, you:blankP('adult', 'man')};
+JUDGES.forEach(([n], i) => $('pJ').add(new Option(n, i)));
+const pct = (x, n) => n ? Math.round(x / n * 100) : 0;
+const bar = c => { const b = el('div', 'pb'); for(const k of ['g', 'o', 'r']){ const s = el('span', k); s.style.width = (c.n ? c[k] / c.n * 100 : 0) + '%'; b.appendChild(s); } return b; };
+const label = p => { const ph = phrase(p); return ph.words.join(' ') + (p.role ? ' (' + word('role', p.role) + ')' : ''); };
+function drawP(){
+  const rows = PEOPLE.all(PS.side, PS.j).filter(r => PS.among === 'all' || (PS.among === 'grown') === grown(r.p)).sort((a, b) => b[PS.by] / b.n - a[PS.by] / a.n || label(a.p).localeCompare(label(b.p)));
+  const L = $('pList'); L.innerHTML = ''; const shown = PS.more ? rows : rows.slice(0, 25);
+  shown.forEach((row, i) => { const li = el('li'); li.append(el('span', 'pr', String(i + 1)), el('span', 'pn', label(row.p)), bar(row),
+      el('span', 'pp', `${pct(row.g, row.n)} · ${pct(row.o, row.n)} · ${pct(row.r, row.n)}`));
+    li.title = `${row.n} situations`; li.onclick = () => { PS.you = {...row.p}; drawYou(); $('pCard').scrollIntoView({behavior:'smooth', block:'center'}); }; L.appendChild(li); });
+  $('pMore').textContent = PS.more ? 'show the top 25' : `show everyone (${rows.length})`;
+  $('pNote').textContent = (PS.side === 'd' ? 'Each person does all 31 acts to every plain person (little boy to old woman). ' : 'All 31 acts are done to each person by every plain person. Acts that need a detail they don’t have are left out. ')
+    + 'Percentages are green · orange · red. Click anyone to open their card.';
+  drawYou();
+}
+function drawYou(){
+  const p = PS.you, pk = $('pPick'), dt = $('pDet'); pk.innerHTML = ''; dt.innerHTML = '';
+  for(const age of AGE) for(const sex of SEX){ const b = el('button', 'chip sm' + (p.age === age && p.sex === sex ? ' on' : ''), noun({age, sex})); b.onclick = () => { PS.you = {...p, age, sex}; clean(PS.you); SND.pop(); drawYou(); }; pk.appendChild(b); }
+  for(const dm of DIMS){ if(!dimOk(dm.k, p)) continue; dm.vals.forEach(v => { const on = p[dm.k] === v; const b = el('button', 'chip sm' + (on ? ' on' : ''), word(dm.k, v)); b.onclick = () => { PS.you = {...p, [dm.k]: on ? null : v}; SND.pop(); drawYou(); }; dt.appendChild(b); }); }
+  const C = $('pCard'); C.innerHTML = ''; const card = el('div', 'pcard'); card.appendChild(el('div', 'pcn', describe(p, true) + '.'));
+  for(const side of ['d', 't']){ const c = PEOPLE.score(p, side, PS.j); const rows = PEOPLE.all(side, PS.j);
+    const rank = 1 + rows.filter(r => r.g / r.n > c.g / c.n + 1e-9).length;
+    const box = el('div', 'pcb'); box.append(bar(c), el('div', 'pcs', `${pct(c.g, c.n)}% green · ${pct(c.o, c.n)}% orange · ${pct(c.r, c.n)}% red, across ${c.n.toLocaleString()} situations`));
+    card.append(el('div', 'pcl', side === 'd' ? 'doing it' : 'on the receiving end'), box); }
+  const many = Object.keys(p).filter(k => DK[k] && p[k] != null).length;
+  card.appendChild(el('div', 'pcx', (many > 1 ? 'Mixed details aren’t in the ranking below, which holds one detail at a time; this card counts them all. ' : '') + (PS.j ? 'Judged by ' + JUDGES[PS.j][0] + '.' : '')));
+  C.appendChild(card);
+}
+$('pSide').onchange = e => { PS.side = e.target.value; drawP(); };
+$('pBy').onchange = e => { PS.by = e.target.value; drawP(); };
+$('pJ').onchange = e => { PS.j = +e.target.value; drawP(); };
+$('pAmong').onchange = e => { PS.among = e.target.value; drawP(); };
+$('pMore').onclick = () => { PS.more = !PS.more; drawP(); };
+
 // ---------- web of norms ----------
 // A norm = one act with one set of reasons. Every sentence lands on exactly one; 88,992 sentences make about 1,400 norms.
 const sigOf = why => why.map(w => w[1]).sort().join('|');
@@ -904,8 +995,9 @@ const WEB = (() => {
   };
 })();
 
-function show(w){ for(const [id, t] of [['B','tB'],['C','tC'],['M','tM'],['W','tW']]){ $(id).hidden = id !== w; $(t).setAttribute('aria-pressed', id === w); } if(w === 'B') drawB(); if(w === 'C') drawC(); if(w === 'M'){ if(S.a !== null) $('mAct').value = S.a; drawMap(); } if(w === 'W') WEB.open(); }
+function show(w){ for(const [id, t] of [['B','tB'],['C','tC'],['M','tM'],['W','tW'],['P','tP']]){ $(id).hidden = id !== w; $(t).setAttribute('aria-pressed', id === w); } if(w === 'B') drawB(); if(w === 'C') drawC(); if(w === 'M'){ if(S.a !== null) $('mAct').value = S.a; drawMap(); } if(w === 'W') WEB.open(); if(w === 'P') drawP(); }
 $('tW').onclick = () => show('W');
+$('tP').onclick = () => show('P');
 $('toweb').onclick = () => { show('W'); WEB.findAndFly(S.a, S.d, S.t, S.j); };
 $('ctoweb').onclick = () => { show('W'); WEB.findAndFly(C.a, C.d, C.t, C.j); };
 $('tB').onclick = () => show('B'); $('tC').onclick = () => show('C'); $('tM').onclick = () => show('M');

@@ -4,7 +4,7 @@ const OL = (() => {
   const key = (...a) => a.join('.');
   function head(){ H.innerHTML = ''; const raw = $('find').value.trim();
     if(QRY){ H.append('Searching for “' + raw + '”'); const g = el('button', 'goback', '← go back'); g.onclick = () => { SND.tick(.8); setQ(''); }; H.append(g); }
-    else H.append('@@LEAD@@…'); }
+    else H.append('@@LEAD@@@@EMPTY@@'); }
   const mark = txt => { const f = document.createDocumentFragment(), i = QRY ? nrm(txt).indexOf(QRY) : -1; if(i < 0){ f.append(txt); return f; } f.append(txt.slice(0, i), el('mark', null, txt.slice(i, i + QRY.length)), txt.slice(i + QRY.length)); return f; };
   function row(label, count, k, depth, icon){ const isOpen = open.has(k);
     const b = el('button', 'orow d' + depth + (isOpen ? ' open' : '')); if(icon) b.append(icon); const t = el('span', 'ot'); t.append(mark(label)); b.append(t); if(count) b.append(el('span', 'oc', count));
@@ -74,12 +74,12 @@ const SM = (() => {
         if(selKid && k !== selKid) p.classList.add('off'); svg.appendChild(p);
         if(!reduced && grewAt >= 0 && d > grewAt){ const L = p.getTotalLength(); p.style.strokeDasharray = L + ' ' + (L + 4); p.style.strokeDashoffset = L + 2; p.getBoundingClientRect();
           p.style.transition = `stroke-dashoffset .55s cubic-bezier(.5,0,.2,1) ${n*.03}s, opacity .4s`; p.style.strokeDashoffset = 0; } }); } }
-  function talk(){ say.innerHTML = ''; const w = []; if(sel[0] != null) w.push(P[sel[0]].s || P[sel[0]].n); if(sel[1] != null) w.push(P[sel[0]].u[sel[1]].s || P[sel[0]].u[sel[1]].n); if(sel[2] != null) w.push(P[sel[0]].t[sel[2]].s || P[sel[0]].t[sel[2]].t);
-    if(QRY){ say.append('Searching for “' + $('find').value.trim() + '”' + (w.length ? ' in ' + w.join(', ') : '')); return; }
-    say.append('@@LEAD@@' + (w.length ? ' ' : '…')); w.forEach((x, i) => { const b = el('b', 'back1', x); b.setAttribute('role', 'button'); b.tabIndex = 0; b.title = 'Step back to here';
+  function talk(){ say.innerHTML = ''; const say1 = (x, k) => x.s != null ? x.s : x[k]; let w = []; if(sel[0] != null) w.push([say1(P[sel[0]], 'n'), 0]); if(sel[1] != null) w.push([say1(P[sel[0]].u[sel[1]], 'n'), 1]); if(sel[2] != null) w.push([say1(P[sel[0]].t[sel[2]], 't'), 2]); w = w.filter(x => x[0] !== '');
+    if(QRY){ say.append('Searching for “' + $('find').value.trim() + '”' + (w.length ? ' in ' + w.map(x => x[0]).join(', ') : '')); return; }
+    say.append('@@LEAD@@' + (w.length ? '@@GLUE@@' : '@@EMPTY@@')); w.forEach(([x, i], k) => { const b = el('b', 'back1', x); b.setAttribute('role', 'button'); b.tabIndex = 0; b.title = 'Step back to here';
       /* tapping a word in the sentence steps back to that choice, which is the way home on a phone where earlier columns scroll away */
       b.onclick = () => { for(let k = i; k < 3; k++) sel[k] = null; ki = null; render(); S.scrollTo({left: 0, behavior: reduced ? 'auto' : 'smooth'}); };
-      say.append(b, i === w.length - 1 ? '?' : ', '); }); }
+      say.append(b, k === w.length - 1 ? '@@END@@' : ', '); }); }
   /* the sound belongs to the list, not the click: each new item that drops in pops, a little higher than the last */
   function patter(){ if(reduced) return; const g = cols().filter(c => c.classList.contains('grow') && c.children.length); if(!g.length) return;
     const c = g[0], n = Math.min(c.children.length, 12), d = cols().indexOf(c);

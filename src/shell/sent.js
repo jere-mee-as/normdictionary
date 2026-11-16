@@ -1,12 +1,14 @@
 /* =================== SENTENCE: the heading writes itself; each choice flies up into it =================== */
 function makeSent(cfg){
   let path = [], busy = false; const S = $(cfg.sec), H = $(cfg.h), B = $(cfg.b), STEPS = $(cfg.st);
-  const words = p => { const w = []; if(p.length > 0) w.push(P[p[0]].s || P[p[0]].n); if(p.length > 1) w.push(P[p[0]].u[p[1]].s || P[p[0]].u[p[1]].n); if(p.length > 2) w.push(P[p[0]].t[p[2]].s || P[p[0]].t[p[2]].t); return w; };
+  /* each chosen layer's words, with the layer it came from; a layer whose wording is '' stays out of the sentence */
+  const say1 = (x, k) => x.s != null ? x.s : x[k];
+  const words = p => { const w = []; if(p.length > 0) w.push([say1(P[p[0]], 'n'), 0]); if(p.length > 1) w.push([say1(P[p[0]].u[p[1]], 'n'), 1]); if(p.length > 2) w.push([say1(P[p[0]].t[p[2]], 't'), 2]); return w.filter(x => x[0] !== ''); };
   /* while searching, the heading says so ("Searching for “islam” in Religion, …") and offers a way back */
   function head(hideLast){ H.innerHTML = ''; const w = words(path), raw = $('find').value.trim(), searching = !!QRY;
     if(searching){ H.append('Searching for “' + raw + '”'); if(w.length) H.append(' in'); }
-    else { H.append('@@LEAD@@'); if(!w.length){ H.append('…'); return null; } }
-    let last = null; w.forEach((txt, i) => { H.append(' '); const b = el('button', 'w', txt); b.onclick = () => back(i); H.appendChild(b); H.append(i === w.length - 1 ? (searching ? '' : '?') : ','); last = b; });
+    else { H.append('@@LEAD@@'); if(!w.length){ H.append('@@EMPTY@@'); return null; } }
+    let last = null; w.forEach(([txt, i], k) => { H.append(k === 0 && !searching ? '@@GLUE@@' : ' '); const b = el('button', 'w', txt); b.onclick = () => back(i); H.appendChild(b); H.append(k === w.length - 1 ? (searching ? '' : '@@END@@') : ','); last = b; });
     if(searching){ const g = el('button', 'goback', '← go back'); g.onclick = () => { SND.tick(.8); setQ(''); }; H.append(g); }
     if(hideLast && last) last.style.opacity = 0; return last; }
   /* which layer you're choosing in: steps over the heading; the ones you've passed lead back */
@@ -51,7 +53,11 @@ function makeSent(cfg){
     x.querySelectorAll('.c,.hits,.ic').forEach(e => e.style.opacity = 0);
     const fly = el('div', 'fly', src.textContent); Object.assign(fly.style, {left: rc.left + 'px', top: rc.top + 'px', fontSize: fs + 'px'}); document.body.appendChild(fly); src.style.visibility = 'hidden';
     S.scrollTo({top: 0, behavior: reduced ? 'auto' : 'smooth'});
-    setTimeout(() => { path = p; const tw = head(true), tr = tw.getBoundingClientRect(), tfs = parseFloat(getComputedStyle(tw).fontSize), now = fly.getBoundingClientRect();
+    setTimeout(() => { path = p; const tw = head(true);
+      /* a layer that stays out of the sentence (wording '') has nowhere to land: the word just lifts away */
+      if(!tw){ const a0 = fly.animate([{transform: 'none', opacity: 1}, {transform: 'translateY(-18px)', opacity: 0}], {duration: reduced ? 1 : 320, easing: 'ease-out', fill: 'forwards'});
+        a0.onfinish = () => { fly.remove(); SND.tick(.75); body(); busy = false; }; return; }
+      const tr = tw.getBoundingClientRect(), tfs = parseFloat(getComputedStyle(tw).fontSize), now = fly.getBoundingClientRect();
       const k = tfs / fs, dx = tr.left - now.left, dy = tr.top - now.top;
       const a = fly.animate([{transform: 'none'}, {transform: `translate(${dx*.55}px,${dy*.55 - 26}px) scale(${1 + (k - 1)*.6})`, offset: .55}, {transform: `translate(${dx}px,${dy}px) scale(${k})`}],
         {duration: reduced ? 1 : 520, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'});

@@ -6,9 +6,9 @@ import json, os
 H = os.path.dirname(os.path.abspath(__file__))
 def r(f): return open(os.path.join(H, f), encoding='utf-8').read()
 def js(x): return json.dumps(x, ensure_ascii=False).replace('</', '<\\/')
-def build(P, out, *, title, lead, key, words, steps, plurals=None, pfps=None, foot='', theme='ink'):
+def build(P, out, *, title, lead, key, words, steps, plurals=None, pfps=None, foot='', theme='ink', glue=' ', empty='…', end='?'):
     cfg = {'w': words, 'steps': steps, 'pl': plurals or {}}
-    s = r('template.html').replace('@@SENTCSS@@', r('sentence.css')).replace('@@SENTJS@@', r('sent.js')).replace('@@TREEJS@@', r('tree.js'))
+    s = r('template.html').replace('@@SENTCSS@@', r('sentence.css')).replace('@@SENTJS@@', r('sent.js')).replace('@@TREEJS@@', r('tree.js')).replace('@@GLUE@@', glue).replace('@@EMPTY@@', empty).replace('@@END@@', end)
     s = s.replace('@@TITLE@@', title).replace('@@LEAD@@', lead).replace('@@KEY@@', key).replace('@@DEFTHEME@@', theme).replace('@@FOOT@@', foot)
     s = s.replace('@@JERE@@', r('jere.txt').strip()).replace('@@CFG@@', js(cfg)).replace('@@PFPS@@', js(pfps or {})).replace('@@DATA@@', js(P))
     assert '@@' not in s, s[s.index('@@'):s.index('@@') + 30]

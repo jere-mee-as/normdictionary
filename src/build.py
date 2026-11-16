@@ -162,7 +162,7 @@ D = [
   ]),
 ]),
 
-('Showing', '◯', [
+('Showing', '○', [
   ('Skin', [
     ('In public', 'Said: “Have some decency.”', [
       ('fine', 'A bikini, at the beach.'),
@@ -347,22 +347,34 @@ def fold(f, v):
                 if val != v: rows.append([an, VORD.index(val), val])
     return rows
 
+# A first layer of groups keeps the opening list short; each headword and its object become one row underneath.
+GROUPS = [('Harm', '✕', ['Killing', 'Hitting', 'Punishing', 'Disturbing']),
+          ('Bodies', '○', ['Changing', 'Showing', 'Touching', 'Eating', 'Watching', 'Wearing']),
+          ('Words', '≠', ['Lying', 'Mocking', 'Swearing', 'Asking', 'Making noise', 'Posting']),
+          ('Money', '¤', ['Selling', 'Taking', 'Betting', 'Giving', 'Spending', 'Copying']),
+          ('Love and family', '♥', ['Loving', 'Dating', 'Leaving', 'Keeping']),
+          ('Faith', '☉', ['Believing', 'Praying']),
+          ('Manners and rules', '§', ['Breaking', 'Cutting in line', 'Being late', 'Starting'])]
+HW = {verb: (sig, objs) for verb, sig, objs in D}
+assert sorted(HW) == sorted(v for _, _, vs in GROUPS for v in vs), set(HW) ^ {v for _, _, vs in GROUPS for v in vs}
 P = []
-for verb, sig, objs in D:
-    e = {'n': verb, 's': low(verb), 'i': sig, 'u': [], 't': []}
-    for obj, entries in objs:
-        ix = []
-        for entry, said, cases in entries:
-            k = []
-            for v, f in sorted(cases, key=ckey):
-                it = {'q': v, 'qd': v, 'qv': VORD.index(v), 'f': f, 'c': f'{verb} {low(obj)}, {low(entry)}: {f} ({v})'}
-                rows = fold(f, v)
-                if rows:
-                    it.update(deg=1, mv=rows, ml='Seen differently by', m=' · '.join(f'{a}: {w}' for a, _, w in rows))
-                    it['c'] += '\n' + '\n'.join(f'{a}: {w}' for a, _, w in rows)
-                k.append(it)
-            ix.append(len(e['t'])); e['t'].append({'t': entry, 's': low(entry), 'p': said, 'k': k})
-        e['u'].append({'n': obj, 's': low(obj), 't': ix})
+for gname, gsig, verbs in sorted(GROUPS):
+    e = {'n': gname, 's': '', 'i': gsig, 'u': [], 't': []}
+    for verb in sorted(verbs):
+        sig, objs = HW[verb]
+        for obj, entries in objs:
+            ix = []
+            for entry, said, cases in entries:
+                k = []
+                for v, f in sorted(cases, key=ckey):
+                    it = {'q': v, 'qd': v, 'qv': VORD.index(v), 'f': f, 'c': f'{verb} {low(obj)}, {low(entry)}: {f} ({v})'}
+                    rows = fold(f, v)
+                    if rows:
+                        it.update(deg=1, mv=rows, ml='Seen differently by', m=' · '.join(f'{a}: {w}' for a, _, w in rows))
+                        it['c'] += '\n' + '\n'.join(f'{a}: {w}' for a, _, w in rows)
+                    k.append(it)
+                ix.append(len(e['t'])); e['t'].append({'t': entry, 's': low(entry), 'p': said, 'k': k})
+            e['u'].append({'n': f'{verb} {low(obj)}', 's': f'{low(verb)} {low(obj)}', 'i': sig, 't': ix})
     P.append(e)
 for ai, (an, _, ov) in enumerate(ARCH):
     for key in ov: assert USED[(ai, key)] == 1, (an, key, USED[(ai, key)])
@@ -377,20 +389,20 @@ CSS = ('<style>#outl .okids{margin-left:46px}#outl .okids .okids{margin-left:40p
 def sub(txt):
     return ('<script>addEventListener("DOMContentLoaded",()=>{const t=' + shell.js(txt) + ';["oh","sh"].forEach(id=>{const h=document.getElementById(id);if(!h)return;'
             'const s=document.createElement("div");s.className="subt";s.textContent=t;h.after(s);'
-            'const f=()=>{s.style.display=h.textContent.trim().endsWith("…")?"":"none"};f();new MutationObserver(f).observe(h,{childList:true,subtree:true,characterData:true})})})</script>')
+            'const f=()=>{s.style.display=h.querySelector("button.w,b.back1")?"none":""};f();new MutationObserver(f).observe(h,{childList:true,subtree:true,characterData:true})})})</script>')
 
 def toggle(on):
     a = lambda href, name: f'<a href="{href}"' + (' class="on" aria-current="page"' if name == on else '') + f'>{name}</a>'
     return '<nav class="foot vt" aria-label="Version">' + a('./', 'plain') + '<span>·</span>' + a('granular.html', 'granular') + '</nav>'
 
-SUBTXT = ('What people in the US, today, treat as okay to do, and what not. Stated, not judged. '
-          'Each entry opens with the rule people say out loud. Read down it and look for the rule they actually follow. '
-          'A ° means some people see it differently: tap the case.')
+SUBTXT = ('What we treat as okay, and how it changes with who does it, to whom, and where. '
+          'Stated, not judged: each entry opens with the rule people say out loud, and the cases under it show the one they actually follow. '
+          'A ° means some people see it differently. For every combination of who and to whom, see granular.')
 GSUBTXT = ('The same act, by who does it and who it’s done to. Pick an action, then who’s doing it: '
            'the list is everyone it could be done to, and how that goes over.')
 
-n = shell.build(P, os.path.join(here, '..', 'index.html'), title='Norm Dictionary', lead='So we’re fine with', key='sr',
-    words=['headword', 'object', 'entry', 'case'], steps=['verb', 'what', 'entry', 'cases'], plurals={'entry': 'entries'},
+n = shell.build(P, os.path.join(here, '..', 'index.html'), title='Norm Dictionary', lead='Norm Dictionary', glue=': ', empty='', end='', key='sr',
+    words=['group', 'act', 'entry', 'case'], steps=['group', 'act', 'entry', 'cases'], plurals={'entry': 'entries'},
     foot=CSS + sub(SUBTXT) + toggle('plain'), theme='ink')
 print('built', n, 'bytes;', len(P), 'headwords,', sum(len(e['t']) for e in P), 'entries,', sum(len(t['k']) for e in P for t in e['t']), 'cases,',
       sum(1 for e in P for t in e['t'] for k in t['k'] if k.get('deg')), 'with °')
