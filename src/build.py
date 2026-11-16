@@ -349,7 +349,7 @@ for verb, sig, objs in D:
                     for key, val in ov.items():
                         if f.startswith(key): vs[ai] = VORD.index(val); USED[(ai, key)] += 1
                 cp = f'{verb} {low(obj)}, {low(entry)}: '
-                k.append({'q': v, 'f': f, 'c': f'{cp}{f} ({v})', 'b': VORD.index(v), 'v': vs, 'cp': cp, 'sk': ckey((v, f))[1]})
+                k.append({'q': v, 'qd': v, 'qv': VORD.index(v), 'qr': '', 'f': f, 'c': f'{cp}{f} ({v})', 'b': VORD.index(v), 'v': vs, 'cp': cp, 'sk': ckey((v, f))[1]})
             ix.append(len(e['t'])); e['t'].append({'t': entry, 's': low(entry), 'p': said, 'k': k})
         e['u'].append({'n': obj, 's': low(obj), 't': ix})
     P.append(e)
@@ -357,7 +357,7 @@ for verb, sig, objs in D:
 SUBTXT = ('What people in the US, today, treat as okay to do, and what not. Stated, not judged. '
           'Each entry opens with the rule people say out loud. Read down it and look for the rule they actually follow. Bottom left: see it all through someone else’s eyes.')
 SUB = ('<style>#outl .okids{margin-left:46px}#outl .okids .okids{margin-left:40px}@media (max-width:760px){#outl .okids{margin-left:34px}#outl .okids .okids{margin-left:12px}}'
-       '.subt{color:var(--dim);font-size:17px;line-height:1.45;max-width:34em;margin:-14px 0 30px;font-style:italic}</style>'
+       '.fact .q .vd{color:var(--vc)}.vd.v0{--vc:#1d8a43}.vd.v1{--vc:#3a8a2c}.vd.v2{--vc:#5d8a1f}.vd.v3{--vc:#87881a}.vd.v4{--vc:#a6830d}.vd.v5{--vc:#b86d0c}.vd.v6{--vc:#c2560f}.vd.v7{--vc:#c43d1a}.vd.v8{--vc:#b5231e}:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]{--dk:1}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v0{--vc:#4fd27a}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v1{--vc:#72d468}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v2{--vc:#9cd35d}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v3{--vc:#c6d156}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v4{--vc:#e6c44e}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v5{--vc:#f0a646}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v6{--vc:#f28844}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v7{--vc:#f06a45}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v8{--vc:#ee4a4a}@media (prefers-color-scheme:dark){:root:not([data-theme]) .vd.v0{--vc:#4fd27a}:root:not([data-theme]) .vd.v1{--vc:#72d468}:root:not([data-theme]) .vd.v2{--vc:#9cd35d}:root:not([data-theme]) .vd.v3{--vc:#c6d156}:root:not([data-theme]) .vd.v4{--vc:#e6c44e}:root:not([data-theme]) .vd.v5{--vc:#f0a646}:root:not([data-theme]) .vd.v6{--vc:#f28844}:root:not([data-theme]) .vd.v7{--vc:#f06a45}:root:not([data-theme]) .vd.v8{--vc:#ee4a4a}}.subt{color:var(--dim);font-size:17px;line-height:1.45;max-width:34em;margin:-14px 0 30px;font-style:italic}</style>'
        '<script>addEventListener("DOMContentLoaded",()=>{const t=' + shell.js(SUBTXT) + ';["oh","sh"].forEach(id=>{const h=document.getElementById(id);if(!h)return;'
        'const s=document.createElement("div");s.className="subt";s.textContent=t;h.after(s);'
        'const f=()=>{s.style.display=h.textContent.trim().endsWith("…")?"":"none"};f();new MutationObserver(f).observe(h,{childList:true,subtree:true,characterData:true})})})</script>')
@@ -373,7 +373,7 @@ PERSP = ('<style>.foot.persp{display:flex;align-items:baseline;gap:8px;flex-wrap
          '<script>addEventListener("DOMContentLoaded",()=>{const A=' + shell.js([[a[0], a[1]] for a in ARCH]) + ',V=' + shell.js(VORD) + ';'
          'const S=document.getElementById("arch"),D=document.getElementById("archd");A.forEach((a,i)=>{const o=document.createElement("option");o.value=i;o.textContent=a[0];S.appendChild(o)});'
          'function apply(ai,re){let diff=0;P.forEach(s=>s.t.forEach(t=>{t.k.forEach(k=>{const v=ai in k.v?k.v[ai]:k.b;k._v=v;const d=ai>0&&v!==k.b;if(d)diff++;'
-         'k.q=V[v]+(d?"  ·  most people: "+V[k.b]:"");k.c=k.cp+k.f+" ("+V[v]+(ai>0?", "+A[ai][0].toLowerCase():"")+")"});'
+         'k.qv=v;k.qd=V[v];k.qr=d?"  ·  most people: "+V[k.b]:"";k.q=k.qd+k.qr;k.c=k.cp+k.f+" ("+V[v]+(ai>0?", "+A[ai][0].toLowerCase():"")+")"});'
          't.k.sort((a,b)=>a._v-b._v||(a.sk<b.sk?-1:a.sk>b.sk?1:0))}));'
          'D.textContent=A[ai][1]+(ai>0?" "+diff+" cases differ from most people.":"");if(re)["sent","outl","stem"].forEach(m=>{try{MOD[m].filter(QRY)}catch(e){}})}'
          'let ai=0;try{ai=+localStorage.getItem("sr-arch")||0}catch(e){}if(!A[ai])ai=0;S.value=ai;apply(ai,ai>0);'

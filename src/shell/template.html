@@ -137,7 +137,7 @@ function factEl(k, i){ const b = el('button', 'fact' + (k.m ? '' : ' nofold')); 
   cp.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>';
   const copy = e => { e.stopPropagation(); e.preventDefault(); try { navigator.clipboard.writeText(k.c || k.f).catch(() => {}); } catch(err){} cp.classList.add('ok'); SND.tick(1.5); setTimeout(() => cp.classList.remove('ok'), 1000); };
   cp.addEventListener('click', copy); cp.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') copy(e); }); say.append(cp);
-  if(k.q) b.append(el('span', 'q', k.q)); b.append(say, m); b.onclick = e => { if(e.target.closest('a,.cp') || !k.m) return; b.classList.toggle('open'); SND.tick(b.classList.contains('open') ? 1.1 : .9); }; return b; }
+  if(k.qd != null){ const q = el('span', 'q'); q.append(el('span', 'vd v' + k.qv, k.qd), el('span', 'qr', k.qr || '')); b.append(q); } else if(k.q) b.append(el('span', 'q', k.q)); b.append(say, m); b.onclick = e => { if(e.target.closest('a,.cp') || !k.m) return; b.classList.toggle('open'); SND.tick(b.classList.contains('open') ? 1.1 : .9); }; return b; }
 /* the little picture or sigil left of a name: d = depth (0 or 1) */
 const PF = (() => { try { return JSON.parse(document.getElementById('pfps').textContent); } catch(e){ return {}; } })();
 function ico(d, si, gi){ const v = d === 0 ? P[si].i : (P[si].u[gi] || {}).i; if(!v) return null; const s = el('span', 'ic');
@@ -150,7 +150,7 @@ const LAYER = W;
 /* underline the searched words inside a piece of text */
 function gmark(txt){ const f = document.createDocumentFragment(), i = QRY ? nrm(txt).indexOf(QRY) : -1; if(i < 0){ f.append(txt); return f; }
   const m = document.createElement('mark'); m.textContent = txt.slice(i, i + QRY.length); f.append(txt.slice(0, i), m, txt.slice(i + QRY.length)); return f; }
-function markFact(x){ if(!QRY) return x; x.querySelectorAll('.say .tx,:scope > .q').forEach(e => { const t = e.textContent; e.textContent = ''; e.append(gmark(t)); }); return x; }
+function markFact(x){ if(!QRY) return x; x.querySelectorAll('.say .tx,:scope > .q:not(:has(span)),:scope > .q > span').forEach(e => { const t = e.textContent; e.textContent = ''; e.append(gmark(t)); }); return x; }
 let QRY = '';
 /* search reaches through every layer: a topic counts only if its own name or one of its facts says the words; facts are culled the same way */
 const TXT = P.map(s => s.t.map(t => nrm(t.t + ' ' + (t.p || '') + ' ' + t.k.map(k => (k.q || '') + ' ' + k.f + ' ' + (k.m || '')).join(' '))));
