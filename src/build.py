@@ -367,18 +367,6 @@ for verb, sig, objs in D:
 for ai, (an, _, ov) in enumerate(ARCH):
     for key in ov: assert USED[(ai, key)] == 1, (an, key, USED[(ai, key)])
 
-from gran import G
-PG = []
-for verb, sig, actions in G:
-    e = {'n': verb, 's': low(verb), 'i': sig, 'u': [], 't': []}
-    for action, said, doers in actions:
-        ix = []
-        for doer, recips in doers:
-            k = [{'q': v, 'qd': v, 'qv': VORD.index(v), 'f': f, 'c': f'{verb}, {low(action)}, {low(doer)}, {low(f).rstrip(".")}: {v}'} for v, f in sorted(recips, key=ckey)]
-            ix.append(len(e['t'])); e['t'].append({'t': doer, 's': low(doer), 'p': said, 'k': k})
-        e['u'].append({'n': action, 's': low(action), 't': ix})
-    PG.append(e)
-
 CSS = ('<style>#outl .okids{margin-left:46px}#outl .okids .okids{margin-left:40px}@media (max-width:760px){#outl .okids{margin-left:34px}#outl .okids .okids{margin-left:12px}}'
        + '.vd{color:var(--vc)}.vd.v0{--vc:#1d8a43}.vd.v1{--vc:#3a8a2c}.vd.v2{--vc:#5d8a1f}.vd.v3{--vc:#87881a}.vd.v4{--vc:#a6830d}.vd.v5{--vc:#b86d0c}.vd.v6{--vc:#c2560f}.vd.v7{--vc:#c43d1a}.vd.v8{--vc:#b5231e}:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]{--dk:1}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v0{--vc:#4fd27a}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v1{--vc:#72d468}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v2{--vc:#9cd35d}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v3{--vc:#c6d156}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v4{--vc:#e6c44e}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v5{--vc:#f0a646}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v6{--vc:#f28844}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v7{--vc:#f06a45}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v8{--vc:#ee4a4a}@media (prefers-color-scheme:dark){:root:not([data-theme]) .vd.v0{--vc:#4fd27a}:root:not([data-theme]) .vd.v1{--vc:#72d468}:root:not([data-theme]) .vd.v2{--vc:#9cd35d}:root:not([data-theme]) .vd.v3{--vc:#c6d156}:root:not([data-theme]) .vd.v4{--vc:#e6c44e}:root:not([data-theme]) .vd.v5{--vc:#f0a646}:root:not([data-theme]) .vd.v6{--vc:#f28844}:root:not([data-theme]) .vd.v7{--vc:#f06a45}:root:not([data-theme]) .vd.v8{--vc:#ee4a4a}}' +
        '.subt{color:var(--dim);font-size:17px;line-height:1.45;max-width:34em;margin:-14px 0 30px;font-style:italic}'
@@ -406,7 +394,10 @@ n = shell.build(P, os.path.join(here, '..', 'index.html'), title='Norm Dictionar
     foot=CSS + sub(SUBTXT) + toggle('plain'), theme='ink')
 print('built', n, 'bytes;', len(P), 'headwords,', sum(len(e['t']) for e in P), 'entries,', sum(len(t['k']) for e in P for t in e['t']), 'cases,',
       sum(1 for e in P for t in e['t'] for k in t['k'] if k.get('deg')), 'with °')
-n = shell.build(PG, os.path.join(here, '..', 'granular.html'), title='Norm Dictionary · granular', lead='So we’re fine with', key='sr',
-    words=['headword', 'action', 'doer', 'target'], steps=['verb', 'action', 'from', 'to'], plurals={},
-    foot=CSS + sub(GSUBTXT) + toggle('granular'), theme='ink')
-print('granular', n, 'bytes;', len(PG), 'headwords,', sum(len(e['u']) for e in PG), 'actions,', sum(len(e['t']) for e in PG), 'doers,', sum(len(t['k']) for e in PG for t in e['t']), 'targets')
+# Granular: a standalone page (rules model, build / cryptex / map), sharing the themes, sound and toggle.
+tpl = open(os.path.join(here, 'shell', 'template.html'), encoding='utf-8').read()
+themes = '\n'.join(l for l in tpl.split('<style>', 1)[1].split('\n')[:14] if l.startswith(':root') or l.startswith('@media (prefers-color-scheme'))
+jere = open(os.path.join(here, 'shell', 'jere.txt'), encoding='utf-8').read().strip()
+g = open(os.path.join(here, 'granular_app.html'), encoding='utf-8').read().replace('@@THEMES@@', themes).replace('@@JERE@@', jere)
+open(os.path.join(here, '..', 'granular.html'), 'w', encoding='utf-8').write(g)
+print('granular', len(g), 'bytes')
