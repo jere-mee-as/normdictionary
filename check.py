@@ -33,6 +33,6 @@ async def run(page_name, w, h):
         print(tag, 'foot:', '-', 'ERRORS:', errs)
         await b.close()
 async def main():
-    for pn in ['index.html']:
+    for pn in ['index.html', 'granular.html']:
         for w, h in [(1280, 800), (390, 844)]: await run(pn, w, h)
 asyncio.run(main())

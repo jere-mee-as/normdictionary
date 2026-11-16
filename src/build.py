@@ -336,6 +336,17 @@ def low(s): return s[0].lower() + s[1:]
 from arch import ARCH
 import collections
 USED = collections.Counter()
+
+def fold(f, v):
+    """Perspectives that see this case differently, for the ° fold."""
+    rows = []
+    for ai, (an, _, ov) in enumerate(ARCH):
+        for key, val in ov.items():
+            if f.startswith(key):
+                USED[(ai, key)] += 1
+                if val != v: rows.append([an, VORD.index(val), val])
+    return rows
+
 P = []
 for verb, sig, objs in D:
     e = {'n': verb, 's': low(verb), 'i': sig, 'u': [], 't': []}
@@ -344,41 +355,58 @@ for verb, sig, objs in D:
         for entry, said, cases in entries:
             k = []
             for v, f in sorted(cases, key=ckey):
-                vs = {}
-                for ai, (an, _, ov) in enumerate(ARCH):
-                    for key, val in ov.items():
-                        if f.startswith(key): vs[ai] = VORD.index(val); USED[(ai, key)] += 1
-                cp = f'{verb} {low(obj)}, {low(entry)}: '
-                k.append({'q': v, 'qd': v, 'qv': VORD.index(v), 'qr': '', 'f': f, 'c': f'{cp}{f} ({v})', 'b': VORD.index(v), 'v': vs, 'cp': cp, 'sk': ckey((v, f))[1]})
+                it = {'q': v, 'qd': v, 'qv': VORD.index(v), 'f': f, 'c': f'{verb} {low(obj)}, {low(entry)}: {f} ({v})'}
+                rows = fold(f, v)
+                if rows:
+                    it.update(deg=1, mv=rows, ml='Seen differently by', m=' · '.join(f'{a}: {w}' for a, _, w in rows))
+                    it['c'] += '\n' + '\n'.join(f'{a}: {w}' for a, _, w in rows)
+                k.append(it)
             ix.append(len(e['t'])); e['t'].append({'t': entry, 's': low(entry), 'p': said, 'k': k})
         e['u'].append({'n': obj, 's': low(obj), 't': ix})
     P.append(e)
-
-SUBTXT = ('What people in the US, today, treat as okay to do, and what not. Stated, not judged. '
-          'Each entry opens with the rule people say out loud. Read down it and look for the rule they actually follow. Bottom left: see it all through someone else’s eyes.')
-SUB = ('<style>#outl .okids{margin-left:46px}#outl .okids .okids{margin-left:40px}@media (max-width:760px){#outl .okids{margin-left:34px}#outl .okids .okids{margin-left:12px}}'
-       '.fact .q .vd{color:var(--vc)}.vd.v0{--vc:#1d8a43}.vd.v1{--vc:#3a8a2c}.vd.v2{--vc:#5d8a1f}.vd.v3{--vc:#87881a}.vd.v4{--vc:#a6830d}.vd.v5{--vc:#b86d0c}.vd.v6{--vc:#c2560f}.vd.v7{--vc:#c43d1a}.vd.v8{--vc:#b5231e}:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]{--dk:1}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v0{--vc:#4fd27a}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v1{--vc:#72d468}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v2{--vc:#9cd35d}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v3{--vc:#c6d156}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v4{--vc:#e6c44e}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v5{--vc:#f0a646}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v6{--vc:#f28844}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v7{--vc:#f06a45}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v8{--vc:#ee4a4a}@media (prefers-color-scheme:dark){:root:not([data-theme]) .vd.v0{--vc:#4fd27a}:root:not([data-theme]) .vd.v1{--vc:#72d468}:root:not([data-theme]) .vd.v2{--vc:#9cd35d}:root:not([data-theme]) .vd.v3{--vc:#c6d156}:root:not([data-theme]) .vd.v4{--vc:#e6c44e}:root:not([data-theme]) .vd.v5{--vc:#f0a646}:root:not([data-theme]) .vd.v6{--vc:#f28844}:root:not([data-theme]) .vd.v7{--vc:#f06a45}:root:not([data-theme]) .vd.v8{--vc:#ee4a4a}}.subt{color:var(--dim);font-size:17px;line-height:1.45;max-width:34em;margin:-14px 0 30px;font-style:italic}</style>'
-       '<script>addEventListener("DOMContentLoaded",()=>{const t=' + shell.js(SUBTXT) + ';["oh","sh"].forEach(id=>{const h=document.getElementById(id);if(!h)return;'
-       'const s=document.createElement("div");s.className="subt";s.textContent=t;h.after(s);'
-       'const f=()=>{s.style.display=h.textContent.trim().endsWith("…")?"":"none"};f();new MutationObserver(f).observe(h,{childList:true,subtree:true,characterData:true})})})</script>')
-
 for ai, (an, _, ov) in enumerate(ARCH):
     for key in ov: assert USED[(ai, key)] == 1, (an, key, USED[(ai, key)])
 
-# Perspective switch (bottom left): re-labels each case with that perspective's verdict, re-sorts, notes where it parts from most people.
-PERSP = ('<style>.foot.persp{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.persp select{font:inherit;color:var(--ink);background:transparent;border:0;'
-         'border-bottom:1px solid var(--faint);padding:0 2px;cursor:pointer;-webkit-appearance:none;appearance:none}.persp select option{color:#000}'
-         '.persp .pd{color:var(--dim);font-style:italic}.fact .q b{font-weight:400;color:var(--ink)}@media (max-width:760px){.persp .pd{display:none}}</style>'
-         '<span class="foot persp">Seen by <select id="arch" aria-label="Seen by"></select><span class="pd" id="archd"></span></span>'
-         '<script>addEventListener("DOMContentLoaded",()=>{const A=' + shell.js([[a[0], a[1]] for a in ARCH]) + ',V=' + shell.js(VORD) + ';'
-         'const S=document.getElementById("arch"),D=document.getElementById("archd");A.forEach((a,i)=>{const o=document.createElement("option");o.value=i;o.textContent=a[0];S.appendChild(o)});'
-         'function apply(ai,re){let diff=0;P.forEach(s=>s.t.forEach(t=>{t.k.forEach(k=>{const v=ai in k.v?k.v[ai]:k.b;k._v=v;const d=ai>0&&v!==k.b;if(d)diff++;'
-         'k.qv=v;k.qd=V[v];k.qr=d?"  ·  most people: "+V[k.b]:"";k.q=k.qd+k.qr;k.c=k.cp+k.f+" ("+V[v]+(ai>0?", "+A[ai][0].toLowerCase():"")+")"});'
-         't.k.sort((a,b)=>a._v-b._v||(a.sk<b.sk?-1:a.sk>b.sk?1:0))}));'
-         'D.textContent=A[ai][1]+(ai>0?" "+diff+" cases differ from most people.":"");if(re)["sent","outl","stem"].forEach(m=>{try{MOD[m].filter(QRY)}catch(e){}})}'
-         'let ai=0;try{ai=+localStorage.getItem("sr-arch")||0}catch(e){}if(!A[ai])ai=0;S.value=ai;apply(ai,ai>0);'
-         'S.onchange=()=>{ai=+S.value;try{localStorage.setItem("sr-arch",ai)}catch(e){}apply(ai,true)}})</script>')
+from gran import G
+PG = []
+for verb, sig, actions in G:
+    e = {'n': verb, 's': low(verb), 'i': sig, 'u': [], 't': []}
+    for action, said, doers in actions:
+        ix = []
+        for doer, recips in doers:
+            k = [{'q': v, 'qd': v, 'qv': VORD.index(v), 'f': f, 'c': f'{verb}, {low(action)}, {low(doer)}, {low(f).rstrip(".")}: {v}'} for v, f in sorted(recips, key=ckey)]
+            ix.append(len(e['t'])); e['t'].append({'t': doer, 's': low(doer), 'p': said, 'k': k})
+        e['u'].append({'n': action, 's': low(action), 't': ix})
+    PG.append(e)
+
+CSS = ('<style>#outl .okids{margin-left:46px}#outl .okids .okids{margin-left:40px}@media (max-width:760px){#outl .okids{margin-left:34px}#outl .okids .okids{margin-left:12px}}'
+       + '.vd{color:var(--vc)}.vd.v0{--vc:#1d8a43}.vd.v1{--vc:#3a8a2c}.vd.v2{--vc:#5d8a1f}.vd.v3{--vc:#87881a}.vd.v4{--vc:#a6830d}.vd.v5{--vc:#b86d0c}.vd.v6{--vc:#c2560f}.vd.v7{--vc:#c43d1a}.vd.v8{--vc:#b5231e}:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]{--dk:1}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v0{--vc:#4fd27a}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v1{--vc:#72d468}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v2{--vc:#9cd35d}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v3{--vc:#c6d156}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v4{--vc:#e6c44e}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v5{--vc:#f0a646}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v6{--vc:#f28844}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v7{--vc:#f06a45}:is(:root[data-theme=night],:root[data-theme=ink],:root[data-theme=slate],:root[data-theme=phosphor]) .vd.v8{--vc:#ee4a4a}@media (prefers-color-scheme:dark){:root:not([data-theme]) .vd.v0{--vc:#4fd27a}:root:not([data-theme]) .vd.v1{--vc:#72d468}:root:not([data-theme]) .vd.v2{--vc:#9cd35d}:root:not([data-theme]) .vd.v3{--vc:#c6d156}:root:not([data-theme]) .vd.v4{--vc:#e6c44e}:root:not([data-theme]) .vd.v5{--vc:#f0a646}:root:not([data-theme]) .vd.v6{--vc:#f28844}:root:not([data-theme]) .vd.v7{--vc:#f06a45}:root:not([data-theme]) .vd.v8{--vc:#ee4a4a}}' +
+       '.subt{color:var(--dim);font-size:17px;line-height:1.45;max-width:34em;margin:-14px 0 30px;font-style:italic}'
+       '.say .deg{color:var(--dim);font-size:.75em;margin-left:2px;line-height:0;cursor:pointer}.fact:hover .say .deg,.fact.open .say .deg{color:var(--ink)}'
+       '.fact .more .mvr{display:flex;gap:12px;align-items:baseline;opacity:1}.fact .more .mvw{min-width:7.2em;color:var(--dim)}'
+       '.foot.vt{display:flex;gap:7px}.vt a{color:var(--dim);text-decoration:none}.vt a:hover{color:var(--ink)}.vt a.on{color:var(--ink);border-bottom:1px solid var(--faint)}</style>')
+
+def sub(txt):
+    return ('<script>addEventListener("DOMContentLoaded",()=>{const t=' + shell.js(txt) + ';["oh","sh"].forEach(id=>{const h=document.getElementById(id);if(!h)return;'
+            'const s=document.createElement("div");s.className="subt";s.textContent=t;h.after(s);'
+            'const f=()=>{s.style.display=h.textContent.trim().endsWith("…")?"":"none"};f();new MutationObserver(f).observe(h,{childList:true,subtree:true,characterData:true})})})</script>')
+
+def toggle(on):
+    a = lambda href, name: f'<a href="{href}"' + (' class="on" aria-current="page"' if name == on else '') + f'>{name}</a>'
+    return '<nav class="foot vt" aria-label="Version">' + a('./', 'plain') + '<span>·</span>' + a('granular.html', 'granular') + '</nav>'
+
+SUBTXT = ('What people in the US, today, treat as okay to do, and what not. Stated, not judged. '
+          'Each entry opens with the rule people say out loud. Read down it and look for the rule they actually follow. '
+          'A ° means some people see it differently: tap the case.')
+GSUBTXT = ('The same act, by who does it and who it’s done to. Pick an action, then who’s doing it: '
+           'the list is everyone it could be done to, and how that goes over.')
 
 n = shell.build(P, os.path.join(here, '..', 'index.html'), title='Norm Dictionary', lead='So we’re fine with', key='sr',
-    words=['headword', 'object', 'entry', 'case'], steps=['verb', 'what', 'entry', 'cases'], plurals={'entry': 'entries'}, foot=SUB + PERSP, theme='ink')
-print('built', n, 'bytes;', len(P), 'headwords,', sum(len(e['t']) for e in P), 'entries,', sum(len(t['k']) for e in P for t in e['t']), 'cases')
+    words=['headword', 'object', 'entry', 'case'], steps=['verb', 'what', 'entry', 'cases'], plurals={'entry': 'entries'},
+    foot=CSS + sub(SUBTXT) + toggle('plain'), theme='ink')
+print('built', n, 'bytes;', len(P), 'headwords,', sum(len(e['t']) for e in P), 'entries,', sum(len(t['k']) for e in P for t in e['t']), 'cases,',
+      sum(1 for e in P for t in e['t'] for k in t['k'] if k.get('deg')), 'with °')
+n = shell.build(PG, os.path.join(here, '..', 'granular.html'), title='Norm Dictionary · granular', lead='So we’re fine with', key='sr',
+    words=['headword', 'action', 'doer', 'target'], steps=['verb', 'action', 'from', 'to'], plurals={},
+    foot=CSS + sub(GSUBTXT) + toggle('granular'), theme='ink')
+print('granular', n, 'bytes;', len(PG), 'headwords,', sum(len(e['u']) for e in PG), 'actions,', sum(len(e['t']) for e in PG), 'doers,', sum(len(t['k']) for e in PG for t in e['t']), 'targets')
