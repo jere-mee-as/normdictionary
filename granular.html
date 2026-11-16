@@ -102,17 +102,34 @@ main{max-width:1120px;margin:0 auto;padding:30px 32px 140px}
 .mnote{color:var(--dim);font-size:14px;font-style:italic;margin-top:14px}
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;font-size:13px;color:var(--dim)}
 .legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:12px;height:12px;border-radius:2px;background:var(--vc);display:inline-block}
+/* web */
+.towebb{color:var(--ink)!important;border-bottom:1px solid var(--dim)}
+.wtop{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font-size:14px;margin-bottom:12px}
+.wtop .wl{color:var(--dim)}.wjs{display:flex;flex-wrap:wrap;gap:4px 14px}.wjs button{color:var(--dim)}.wjs button[aria-pressed=true]{color:var(--ink);border-bottom:1px solid var(--dim)}
+.wbox{position:relative;height:min(70vh,760px);margin:0 -32px;border-top:1px solid var(--faint);border-bottom:1px solid var(--faint);touch-action:none;cursor:grab;overflow:hidden}
+.wbox.drag{cursor:grabbing}.wbox.pt{cursor:pointer}
+.wbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.wmsg{position:absolute;left:0;right:0;top:46%;text-align:center;color:var(--dim);font-style:italic;pointer-events:none}
+.wzoom{position:absolute;right:14px;bottom:12px;display:flex;gap:6px}
+.wzoom button{min-width:30px;height:30px;padding:0 8px;border:1px solid var(--faint);border-radius:999px;background:var(--bg);color:var(--dim);font-size:14px}.wzoom button:hover{color:var(--ink);border-color:var(--dim)}
+.winfo{margin-top:20px;min-height:9em;max-width:52em}
+.winfo .ws{font-size:clamp(20px,2.4vw,26px);line-height:1.35}
+.winfo .wv{font-size:22px;color:var(--vc);margin-top:6px}
+.winfo .wm{color:var(--dim);font-size:14px;margin-top:6px}
+.winfo .wr{margin-top:10px;font-size:15.5px;line-height:1.5}
+.winfo .wb{margin-top:12px;display:flex;gap:18px;font-size:14px}.winfo .wb button{color:var(--dim)}.winfo .wb button:hover{color:var(--ink)}
+.winfo .wi{color:var(--dim);font-size:15px;line-height:1.55}
 /* chrome shared with the plain page */
 .foot{position:fixed;left:18px;bottom:16px;z-index:19;font-size:13px;color:var(--dim);background:var(--bg);padding:4px 6px;border-radius:999px;display:flex;gap:7px}
 .foot a{color:var(--dim);text-decoration:none}.foot a:hover{color:var(--ink)}.foot a.on{color:var(--ink);border-bottom:1px solid var(--faint)}
 .credit{position:fixed;right:18px;bottom:16px;z-index:19;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);background:var(--bg);padding:4px 6px 4px 4px;border-radius:999px}.credit b{font-weight:400;color:var(--ink)}
 .credit img{width:20px;height:20px;border-radius:50%;object-fit:cover}
-@media (max-width:760px){main{padding:22px 18px 120px}.bar{margin-bottom:30px}.cxw{--rh:176px}.grid{font-size:11px}.grid .cell{font-size:0}.more{grid-template-columns:1fr}.more .lab{text-align:left}
+@media (max-width:760px){.bar .lg{display:none}.wbox{margin:0 -18px;height:62vh}main{padding:22px 18px 120px}.bar{margin-bottom:30px}.cxw{--rh:176px}.grid{font-size:11px}.grid .cell{font-size:0}.more{grid-template-columns:1fr}.more .lab{text-align:left}
   .foot{left:0;right:0;bottom:0;border-radius:0;padding:11px 20px calc(11px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--faint)}.credit{bottom:8px;right:12px;background:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><main>
-<div class="bar" role="toolbar"><button class="tab" id="tB" aria-pressed="true">build</button><span>·</span><button class="tab" id="tC" aria-pressed="false">cryptex</button><span>·</span><button class="tab" id="tM" aria-pressed="false">map</button>
-  <span class="sp"></span><button class="ic" id="reset">start over ↺</button><button class="ic" id="snd" title="Sound">sound</button><button class="ic" id="thm" title="Theme">theme</button></div>
+<div class="bar" role="toolbar"><button class="tab" id="tB" aria-pressed="true">build</button><span>·</span><button class="tab" id="tC" aria-pressed="false">cryptex</button><span>·</span><button class="tab" id="tM" aria-pressed="false">map</button><span>·</span><button class="tab" id="tW" aria-pressed="false">web</button>
+  <span class="sp"></span><button class="ic" id="reset">↺<span class="lg"> start over</span></button><button class="ic" id="snd" title="Sound">sound</button><button class="ic" id="thm" title="Theme">theme</button></div>
 
 <section id="B">
   <div class="sent" id="sent"></div>
@@ -122,14 +139,21 @@ main{max-width:1120px;margin:0 auto;padding:30px 32px 140px}
     <div class="strip" id="strip"></div>
     <div class="why" id="why"></div>
     <div class="more" id="more"></div>
-    <div class="tools"><button id="swap">swap them ⇄</button><button id="shuf">surprise me ⤮</button></div>
+    <div class="tools"><button id="swap">swap them ⇄</button><button id="shuf">surprise me ⤮</button><button id="toweb" class="towebb">see it in the web of norms →</button></div>
   </div>
 </section>
 
 <section id="C" hidden>
   <div class="cxw"><div class="cx" id="cx"></div></div>
-  <div class="out cxout"><div class="vrow"><span class="vbig" id="cvb"></span><span class="said" id="csaid"></span></div><div class="strip" id="cstrip"></div><div class="why" id="cwhy"></div></div>
+  <div class="out cxout"><div class="vrow"><span class="vbig" id="cvb"></span><span class="said" id="csaid"></span></div><div class="strip" id="cstrip"></div><div class="why" id="cwhy"></div><div class="tools"><button id="ctoweb" class="towebb">see it in the web of norms →</button></div></div>
   <p class="hint">Turn any ring: drag it, flick it, scroll it, or use the arrow keys. “—” leaves a detail out. Only the details that can change this act get a ring.</p>
+</section>
+
+<section id="W" hidden>
+  <div class="wtop"><span class="wl">colored by</span><span id="wj" class="wjs"></span></div>
+  <div class="wbox" id="wbox"><canvas id="wc"></canvas><div class="wmsg" id="wmsg">weaving the web…</div>
+    <div class="wzoom"><button id="wzi" aria-label="Zoom in">+</button><button id="wzo" aria-label="Zoom out">−</button><button id="wfit">all</button></div></div>
+  <div class="winfo" id="winfo"></div>
 </section>
 
 <section id="M" hidden>
@@ -171,11 +195,21 @@ const blankP = (age, sex) => ({age, sex, race:null, rel:null, ori:null, trans:nu
 // Who's judging. Each weighs the kinds of reasons it cares about more, or less.
 const JUDGES = [
   ['most people', 'The mainstream.', {}],
-  ['a progressive', 'Harm, consent, who holds the power.', {race:1.6, ori:1.6, gender:2, punch:1.6, auth:1.3, sex:1.1, body:1.4, dis:1.4, accent:1.6, faith:.5, chiv:.3, police:-1, family:.5}],
-  ['a conservative', 'Order, earned success, the same rules for all.', {race:.5, ori:.5, gender:.15, punch:.4, auth:1.5, sex:1.2, accent:.4, body:.7, faith:2, chiv:1.3, police:1.5, family:1.3}],
-  ['a traditionalist', 'Faith, family, the old ways.', {sex:1.6, age:1.6, kids:1.3, ori:.6, gender:.3, insider:.5, faith:3, chiv:1.6, family:1.8, rel:1.3}],
-  ['a libertarian', 'Your body, your call.', {race:.5, ori:.5, gender:.5, punch:.3, sex:.5, auth:.5, touch:.6, accent:.5, body:.5, chiv:.5, police:-.5, family:1}],
-  ['a utilitarian', 'Count the harm, the same way every time.', {kids:1.5, age:1.2, sex:.6, punch:.5, insider:.5, race:.7, ori:.7, gender:.9, dis:1.3, faith:.5, chiv:.3, family:.6}],
+  ['a progressive', 'Harm, consent, who holds the power.',
+   {race:1.6, ori:1.6, gender:2, punch:1.6, abuse:1.6, defy:.6, copforce:1.8, copdefy:.4, film:1.6, copgood:.4, sex:1, sexism:1.6, harass:1.4, dblstd:.6, agegap:1.3,
+    body:1.4, dis:1.4, autonomy:1.4, accent:1.6, rel:1.2, faith:.5, chiv:.3, family:.5, culture:1}],
+  ['a conservative', 'Order, earned success, the same rules for all.',
+   {race:.5, ori:.5, gender:.15, punch:.4, abuse:.7, defy:1.6, copforce:.4, copdefy:1.8, film:.3, copgood:1.5, sex:1.3, sexism:.5, harass:.8, dblstd:1, agegap:.8,
+    body:.6, dis:1, autonomy:.5, accent:.4, rel:.8, faith:2, chiv:1.3, family:1.5, culture:.8}],
+  ['a traditionalist', 'Faith, family, the old ways.',
+   {race:.8, ori:.6, gender:.3, punch:.8, abuse:1, defy:1.8, copforce:.8, copdefy:1.4, film:.5, copgood:1.4, sex:1.6, sexism:.7, harass:1.1, dblstd:1.3, agegap:.5,
+    age:1.6, kids:1.3, insider:.5, rel:1, faith:3, chiv:1.6, family:2.2, autonomy:.5, culture:1}],
+  ['a libertarian', 'Your body, your call; words are just words.',
+   {race:.5, ori:.5, gender:.5, punch:.3, abuse:.6, defy:.7, copforce:1.6, copdefy:.5, film:1.6, copgood:.6, sex:.6, sexism:.5, harass:.5, dblstd:.6, agegap:.6,
+    touch:.6, accent:.5, body:.5, dis:.8, autonomy:1.2, chiv:.5, family:1, rel:.6, faith:.6}, {words:-1.5, jokes:-1.5}],
+  ['a utilitarian', 'Count the harm, the same way every time.',
+   {kids:1.5, age:1.2, sex:.8, sexism:.8, harass:1, dblstd:.3, punch:.5, insider:.5, race:.8, ori:.8, gender:.9, dis:1.3, autonomy:.4, faith:.5, chiv:.3, family:.6,
+    copforce:1.3, copdefy:.8, film:1.2, abuse:1.2, defy:.8, agegap:.8}],
 ];
 
 // The acts. base: between two people, nothing else said. Each reason carries a tag the judges weigh.
@@ -185,15 +219,15 @@ const ACTS = [
    if(t.role==='cop') return R('=',8,'hitting a cop is a crime, whoever you are');
    if(d.age==='child') return R('=', t.age==='child' ? 4 : 3, t.age==='child' ? 'kids hitting kids: a talking-to' : 'a little kid hitting a bigger person: laughed off');
    if(d.sex==='man' && t.sex==='woman') R(+3,'a male hitting a female: “never hit a girl”','sex');
-   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-2,'a woman hitting a man reads as harmless','sex');
+   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-2,'a woman hitting a man reads as harmless','dblstd');
    if(t.age==='child') R(+4,'hitting a little kid','kids');
    if(t.age==='old' && d.age!=='old') R(+2,'hitting someone old','age');
    if(d.age==='old') R(-2,'what harm can an old person do','age');
    if(t.dis) R(+3,'hitting someone with a disability','dis');
-   if(d.role==='cop') R(+1,'a cop’s hands are held to more','auth');
-   if(d.role==='boss') R(+2,'the boss, at work: a lawsuit','auth');
-   if(d.role==='teacher' && minor(t)) R(+3,'a teacher hitting a student','auth');
-   if(t.role==='boss' || t.role==='teacher') R(+1,'hitting someone above you: fired, or expelled','auth');
+   if(d.role==='cop') R(+3,'a cop hitting someone: brutality','copforce');
+   if(d.role==='boss') R(+2,'the boss, at work: a lawsuit','abuse');
+   if(d.role==='teacher' && minor(t)) R(+3,'a teacher hitting a student','abuse');
+   if(t.role==='boss' || t.role==='teacher') R(+1,'hitting someone above you: fired, or expelled','defy');
    if(t.role==='parent') R(+2,'hitting your own parent','family');
    if(t.role==='homeless') R(+1,'punching down','punch');
    if(t.role==='famous') R(-1,'a celebrity, on camera: it’s a story','punch');
@@ -202,41 +236,41 @@ const ACTS = [
    if(t.role==='cop') return R('=',8,'shoving a cop is assault on an officer');
    if(d.age==='child') return R('=',4,'kids shove: a talking-to');
    if(d.sex==='man' && t.sex==='woman') R(+2,'a man shoving a woman','sex');
-   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-1,'a woman shoving a man: he’ll live','sex');
+   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-1,'a woman shoving a man: he’ll live','dblstd');
    if(t.age==='child' || t.age==='old') R(+3,'shoving someone who can fall','kids');
    if(t.dis) R(+3,'shoving someone with a disability','dis');
-   if(d.role==='cop') R(+1,'a cop shoving: a video, a debate','police');
-   if(d.role==='boss') R(+2,'the boss, at work','auth');
+   if(d.role==='cop') R(+2,'a cop shoving: a video, a debate','copforce');
+   if(d.role==='boss') R(+2,'the boss, at work','abuse');
    if(d.age==='teen' && t.age==='teen') R(-1,'teenagers, in a hallway','age');
  }},
  {g:'hands', w:'spanks', s:'“Never hit a child.”', base:7, split:true, need:{tAge:'minor'}, r(d,t,R){
    if(minor(d)) return R('=',4,'a kid spanking a kid: playing parent');
    if(d.role==='parent') R(-2.5,'a parent, their own child','family');
-   else if(d.role==='teacher') R(+1,'a teacher: legal in a few states, unthinkable in most','auth');
-   else R(0,'someone else’s child: nobody’s business but the parent’s','family');
+   else if(d.role==='teacher') R(+1,'a teacher: legal in a few states, unthinkable in most','abuse');
+   else R(0,'someone else’s child: not yours to discipline','family');
    if(t.age==='teen') R(+1,'a teenager, too old for it','kids');
    if(d.age==='old' && d.role==='parent') R(-1,'“that’s how we were raised”','age');
  }},
  {g:'hands', w:'throws a drink at', s:'“Use your words.”', base:4, r(d,t,R){
    if(d.age==='child') return R('=',3,'a kid with a juice box: laughed off');
-   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-2,'a woman throwing a drink at a man: he must’ve earned it','sex');
+   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-2,'a woman throwing a drink at a man: he must’ve earned it','dblstd');
    if(d.sex==='man' && t.sex==='woman') R(+3,'a man throwing a drink at a woman','sex');
    if(t.age==='old') R(+2,'at someone old','age');
-   if(t.role==='boss') R(+2,'at your boss: fired','auth');
+   if(t.role==='boss') R(+2,'at your boss: fired','defy');
    if(t.role==='famous') R(-1,'at a celebrity: a viral clip','punch');
    if(t.role==='rich') R(-1,'at a rich man in a nice suit','punch');
  }},
  {g:'words', w:'calls', after:'an idiot', cx:'calls … an idiot', s:'“Treat everyone with respect.”', base:6, r(d,t,R){
    if(t.role==='famous') R(-3,'celebrities are fair game','punch');
    if(t.role==='rich') R(-1,'the rich can take it','punch');
-   if(t.role==='boss' || t.role==='teacher') R(+3,'to your boss’s or teacher’s face: fired, or detention','auth');
+   if(t.role==='boss' || t.role==='teacher') R(+3,'to your boss’s or teacher’s face: fired, or detention','defy');
    if(t.role==='parent') R(+2,'to your own parent','family');
-   if(d.role==='boss') R(+2,'from the boss: a hostile workplace','auth');
-   if(d.role==='teacher' && minor(t)) R(+3,'from a teacher, to a student','auth');
+   if(d.role==='boss') R(+2,'from the boss: a hostile workplace','abuse');
+   if(d.role==='teacher' && minor(t)) R(+3,'from a teacher, to a student','abuse');
    if(t.role==='homeless') R(+2,'kicking someone who’s down','punch');
    if(t.dis) R(+3,'to someone with a disability','dis');
    if(t.accent) R(+1,'to someone still learning the language','accent');
-   if(t.role==='cop') R(+1,'mouthing off to a cop','auth');
+   if(t.role==='cop') R(+1,'mouthing off to a cop','copdefy');
    if(grown(d) && t.age==='child') R(+2,'to a little kid','kids');
    if(minor(d) && grown(t)) R(+1,'talking back to an adult','age');
    if(d.age==='old') R(-2,'grandpa says what he thinks','age');
@@ -245,13 +279,13 @@ const ACTS = [
  {g:'words', w:'yells at', s:'“Use your inside voice.”', base:4, r(d,t,R){
    if(d.age==='child') return R('=',2,'a little kid yelling: a tantrum, nothing more');
    if(d.role==='parent' && minor(t)) R(-2,'a parent yelling at their kid: every house, some days','family');
-   if(d.role==='boss') R(+2,'the boss, in front of everyone','auth');
-   if(d.role==='teacher' && minor(t)) R(-1,'a teacher, at a rowdy class','auth');
-   if(t.role==='boss' || t.role==='teacher') R(+2,'yelling up the ladder','auth');
+   if(d.role==='boss') R(+2,'the boss, in front of everyone','abuse');
+   if(d.role==='teacher' && minor(t)) R(-1,'a teacher, at a rowdy class','abuse');
+   if(t.role==='boss' || t.role==='teacher') R(+2,'yelling up the ladder','defy');
    if(t.age==='old') R(+2,'yelling at someone old','age');
    if(t.age==='child' && d.role!=='parent') R(+2,'yelling at someone else’s kid','kids');
    if(d.sex==='man' && t.sex==='woman') R(+1,'a man yelling at a woman','sex');
-   if(d.sex==='woman' && t.sex==='man') R(-1,'a woman yelling at a man','sex');
+   if(d.sex==='woman' && t.sex==='man') R(-1,'a woman yelling at a man','dblstd');
    if(t.role==='homeless') R(+1,'yelling at someone on the street','punch');
    if(t.accent) R(+1,'yelling, as if louder helps them understand','accent');
  }},
@@ -261,7 +295,7 @@ const ACTS = [
    if(d.role==='parent' && minor(t)) R(+2,'swearing at your own kid','family');
    if(grown(d) && minor(t) && d.role!=='parent') R(+2,'swearing at a kid','kids');
    if(t.role==='famous') R(-2,'at a celebrity: they’ll never hear it','punch');
-   if(t.role==='cop') R(+1,'at a cop: protected speech, bad idea','police');
+   if(t.role==='cop') R(+1,'at a cop: protected speech, bad idea','copdefy');
    if(d.age==='old') R(-1,'grandpa, after a few','age');
    if(d.sex==='man' && t.sex==='woman') R(+1,'a man, at a woman','sex');
  }},
@@ -271,14 +305,14 @@ const ACTS = [
    if(t.accent) R(-1,'they have an accent: the question comes naturally','accent');
    if(d.age==='child') R(-2,'a kid is curious','kids');
    if(d.age==='old') R(-1,'“different times”','age');
-   if(d.role==='boss') R(+3,'in a job interview: a legal risk','auth');
-   if(d.role==='cop') R(+3,'from a cop, it sounds like “papers, please”','police');
+   if(d.role==='boss') R(+3,'in a job interview: a legal risk','abuse');
+   if(d.role==='cop') R(+3,'from a cop, it sounds like “papers, please”','copforce');
  }},
  {g:'words', w:'tells', after:'to speak English', cx:'tells … speak English', need:{t:'accent'}, s:'“This is a nation of immigrants.”', base:3, cap:7, r(d,t,R){
    R(+3,'telling someone with an accent to speak English','accent');
-   if(d.role==='boss') R(+2,'from a boss: discrimination','auth');
-   if(d.role==='teacher') R(-1,'a teacher, in an English class','auth');
-   if(d.role==='cop') R(+1,'from a cop','police');
+   if(d.role==='boss') R(+2,'from a boss: discrimination','abuse');
+   if(d.role==='teacher') R(-1,'a teacher, in an English class','abuse');
+   if(d.role==='cop') R(+1,'from a cop','copforce');
    if(d.age==='old') R(-1,'“different times”','age');
    if(d.accent) R(-2,'from someone who also had to learn it','insider');
    if(d.age==='child') R(-1,'a kid who can’t understand them','kids');
@@ -286,17 +320,17 @@ const ACTS = [
  {g:'words', w:'comments on the weight of', cx:'comments on … weight', s:'“Don’t judge people by their looks.”', base:3, r(d,t,R){
    if(t.body==='heavy') R(+3,'about someone heavy: body-shaming','body');
    if(t.body==='thin') R(-1,'about someone thin: practically a compliment','body');
-   if(t.sex==='woman') R(+1,'about a woman’s weight','sex');
+   if(t.sex==='woman') R(+1,'about a woman’s weight','sexism');
    if(d.age==='old') R(-1,'grandma comments on everyone','age');
    if(d.role==='parent') R(-1,'a parent: “just worried about your health”','family');
-   if(d.role==='boss') R(+2,'from the boss','auth');
+   if(d.role==='boss') R(+2,'from the boss','abuse');
    if(minor(t) && grown(d) && d.role!=='parent') R(+2,'about a kid’s weight','kids');
    if(d.body==='heavy' && t.body==='heavy') R(-2,'heavy, about heavy: an insider','insider');
  }},
  {g:'words', w:'misgenders', need:{t:'trans'}, s:'“Call people what they want to be called.”', base:2, split:true, r(d,t,R){
    R(+3,'calls a trans person by the wrong pronoun','gender');
-   if(d.role==='boss') R(+2,'at work: an HR case','auth');
-   if(d.role==='teacher') R(+1,'a teacher, in class','auth');
+   if(d.role==='boss') R(+2,'at work: an HR case','abuse');
+   if(d.role==='teacher') R(+1,'a teacher, in class','abuse');
    if(d.role==='parent') R(-1,'their own parent, still adjusting','family');
    if(d.age==='old') R(-1,'grandma is still learning','age');
    if(minor(d)) R(-1,'a kid getting it wrong','kids');
@@ -305,17 +339,17 @@ const ACTS = [
  {g:'words', w:'asks', after:'when they’re having kids', cx:'asks about kids', s:'“It’s just a question.”', base:2, r(d,t,R){
    if(minor(t)) return R('=',7,'asking a kid that');
    if(t.age==='old') return R('=',3,'asking an old person: a joke');
-   if(t.sex==='woman') R(+2,'asking a woman: her body, her clock','sex');
+   if(t.sex==='woman') R(+2,'asking a woman: her body, her clock','sexism');
    if(d.role==='parent') R(-2,'a parent asking: they want grandkids','family');
-   if(d.role==='boss') R(+3,'the boss asking: illegal in a hiring decision','auth');
+   if(d.role==='boss') R(+3,'the boss asking: illegal in a hiring decision','abuse');
    if(t.ori==='gay') R(+1,'asking a gay couple','ori');
    if(d.age==='old') R(-1,'grandma always asks','age');
  }},
  {g:'words', w:'talks over', after:'in a meeting', cx:'talks over', s:'“Everyone gets a say.”', base:3, r(d,t,R){
-   if(d.sex==='man' && t.sex==='woman') R(+2,'a man talking over a woman','sex');
-   if(d.sex==='woman' && t.sex==='man') R(-1,'a woman talking over a man','sex');
-   if(d.role==='boss') R(-1,'the boss gets to','auth');
-   if(t.role==='boss') R(+2,'talking over your boss','auth');
+   if(d.sex==='man' && t.sex==='woman') R(+2,'a man talking over a woman','sexism');
+   if(d.sex==='woman' && t.sex==='man') R(-1,'a woman talking over a man','dblstd');
+   if(d.role==='boss') R(-1,'the boss gets to','abuse');
+   if(t.role==='boss') R(+2,'talking over your boss','defy');
    if(minor(d) && grown(t)) R(+2,'a kid interrupting the adults','age');
    if(t.age==='old') R(+1,'talking over someone old','age');
    if(t.accent) R(+1,'talking over someone still finding the words','accent');
@@ -329,13 +363,13 @@ const ACTS = [
    if(d.age==='child') R(-2,'a kid repeating what he heard','kids');
    if(d.age==='old') R(-1,'“different times”','age');
    if(d.role==='famous') R(-1,'a comedian on stage: more room','punch');
-   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','auth');
+   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','abuse');
  }},
  {g:'jokes', w:'jokes about the sex of', s:'“Don’t stereotype people.”', base:2, r(d,t,R){
    if(t.sex==='man') R(0,'men are fair game','punch');
    else if(d.sex==='woman') R(0,'women, about women: relatable','insider');
-   else R(+4,'a man, about women: sexist','sex');
-   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','auth');
+   else R(+4,'a man, about women: sexist','sexism');
+   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','abuse');
    if(d.age==='old' && t.sex==='woman' && d.sex==='man') R(-1,'“different times”','age');
    if(t.trans && !d.trans) R(+2,'about a trans person’s sex','gender');
    if(minor(t) && grown(d)) R(+1,'about a kid','kids');
@@ -345,7 +379,7 @@ const ACTS = [
    else if(d.ori==='gay') R(0,'gay, about gay: an insider’s joke','insider');
    else R(+5,'a straight person, about a gay one','ori');
    if(d.age==='child') R(-2,'a kid repeating what he heard','kids');
-   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','auth');
+   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','abuse');
    if(d.role==='famous' && d.ori!=='gay' && t.ori==='gay') R(+1,'on a stage, it becomes a headline','punch');
  }},
  {g:'jokes', w:'jokes about the religion of', need:{t:'rel'}, s:'“Respect other people’s beliefs.”', base:2, r(d,t,R){
@@ -354,11 +388,11 @@ const ACTS = [
    else if(t.rel==='atheist') R(0,'atheists are fair game','punch');
    else R(+4,'an outsider, about a minority faith','rel');
    if(d.role==='famous') R(-1,'a comedian on stage: more room','punch');
-   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','auth');
+   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','abuse');
    if(d.age==='child') R(-2,'a kid repeating what he heard','kids');
  }},
  {g:'jokes', w:'jokes about the age of', s:'“Respect your elders.”', base:2, r(d,t,R){
-   if(t.age==='old' && d.role==='boss') R(+5,'a boss mocking an older worker: a lawsuit','auth');
+   if(t.age==='old' && d.role==='boss') R(+5,'a boss mocking an older worker: a lawsuit','abuse');
    else if(t.age==='old') R(0,'“OK, boomer”','age');
    if(t.age==='child' && grown(d)) R(+2,'mocking a little kid','kids');
    if(d.age==='child' && t.age==='old') R(-1,'kids are honest','kids');
@@ -367,7 +401,7 @@ const ACTS = [
    if(t.body==='heavy' && d.body==='heavy') return R(0,'heavy, about heavy: an insider’s joke','insider');
    if(t.body==='heavy') R(+4,'a joke about someone heavy','body');
    else R(0,'a joke about someone thin: fair game','body');
-   if(t.sex==='woman' && t.body==='heavy') R(+1,'about a woman','sex');
+   if(t.sex==='woman' && t.body==='heavy') R(+1,'about a woman','sexism');
    if(minor(t) && grown(d)) R(+2,'about a kid','kids');
    if(d.role==='famous') R(-1,'a comedian on stage: more room','punch');
  }},
@@ -382,16 +416,16 @@ const ACTS = [
    R(+4,'mocking an immigrant’s accent','accent');
    if(t.race==='white') R(-2,'a British or French accent: everyone does those','race');
    if(d.role==='famous') R(-1,'a comedian on stage: more room','punch');
-   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','auth');
+   if(d.role==='boss' || d.role==='teacher') R(+2,'from the boss or teacher','abuse');
    if(d.age==='child') R(-2,'a kid imitating what he hears','kids');
  }},
  {g:'closeness', w:'compliments the looks of', floor:1, s:'“Everyone likes a compliment.”', base:2, r(d,t,R){
    if(d.age==='old' && d.sex==='woman') return R(-1,'from an old woman, it’s sweet','age');
-   if(d.sex==='man' && t.sex==='woman' && grown(d) && grown(t)) R(+2,'a man, to a woman he doesn’t know','sex');
-   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-1,'a woman, to a man: flattering','sex');
+   if(d.sex==='man' && t.sex==='woman' && grown(d) && grown(t)) R(+2,'a man, to a woman he doesn’t know','harass');
+   if(d.sex==='woman' && t.sex==='man' && grown(t)) R(-1,'a woman, to a man: flattering','harass');
    if(grown(d) && minor(t)) R(d.sex==='man' ? +5 : +2,'a grown-up, about a kid’s looks','kids');
-   if(d.age==='old' && d.sex==='man' && t.age==='adult' && t.sex==='woman') R(+2,'an old man, to a young woman','age');
-   if(d.role==='boss' || d.role==='teacher') R(+3,'from the boss or teacher: HR','auth');
+   if(d.age==='old' && d.sex==='man' && t.age==='adult' && t.sex==='woman') R(+2,'an old man, to a young woman','agegap');
+   if(d.role==='boss' || d.role==='teacher') R(+3,'from the boss or teacher: HR','abuse');
    if(t.role==='famous') R(-1,'they’re used to it','punch');
    if(d.age==='child') R(-1,'from a kid, it’s cute','kids');
  }},
@@ -399,12 +433,12 @@ const ACTS = [
    if(d.age==='child' || (d.age==='old' && d.sex==='woman')) return R('=',1,'everyone lets kids and grandmas hug');
    if(d.sex==='woman') R(-1,'a woman hugging: friendly','touch');
    if(d.sex==='man' && t.sex==='man' && grown(d) && grown(t)) R(+1,'two men who barely know each other','touch');
-   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man hugging a woman he barely knows','sex');
+   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man hugging a woman he barely knows','harass');
    if(d.sex==='man' && grown(d) && minor(t)) R(+4,'a man hugging someone else’s kid','kids');
    if(d.accent) R(-1,'where they’re from, that’s hello','culture');
    if(d.role==='famous') R(-2,'a celebrity hugging a fan: the fan’s best day','punch');
-   if(d.role==='cop' && t.age==='child') R(-2,'a cop hugging a kid: on the news','police');
-   if(d.role==='boss' || d.role==='teacher') R(+2,'the boss or teacher','auth');
+   if(d.role==='cop' && t.age==='child') R(-2,'a cop hugging a kid: on the news','copgood');
+   if(d.role==='boss' || d.role==='teacher') R(+2,'the boss or teacher','abuse');
    if(t.role==='homeless') R(-1,'hugging someone who’s homeless: kind','punch');
  }},
  {g:'closeness', w:'kisses', after:'on the cheek, hello', cx:'kisses … cheek', floor:0, s:'“Ask before you touch.”', base:4, r(d,t,R){
@@ -413,9 +447,9 @@ const ACTS = [
    if(d.accent) R(-3,'where they’re from, that’s hello','culture');
    if(d.sex==='woman' && t.sex==='woman') R(-2,'two women: a greeting','touch');
    if(d.sex==='man' && t.sex==='man' && grown(t)) R(+2,'two American men: a bit much','touch');
-   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man, to a woman he barely knows','sex');
+   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man, to a woman he barely knows','harass');
    if(minor(t) && grown(d)) R(+2,'kissing someone else’s kid','kids');
-   if(d.role==='boss' || d.role==='teacher') R(+3,'the boss or teacher','auth');
+   if(d.role==='boss' || d.role==='teacher') R(+3,'the boss or teacher','abuse');
  }},
  {g:'closeness', w:'touches the hair of', need:{t:'race'}, s:'“Keep your hands to yourself.”', base:4, r(d,t,R){
    if(t.race==='Black' && d.race!=='Black') R(+3,'touching a Black person’s hair: a known line','race');
@@ -424,16 +458,16 @@ const ACTS = [
    if(grown(d) && t.age==='child') R(-2,'patting a kid on the head','kids');
    if(d.role==='parent') R(-3,'a parent','family');
    if(d.sex==='man' && t.sex==='woman' && grown(d)) R(+1,'a man, a woman’s hair','touch');
-   if(d.role==='boss') R(+2,'the boss, at work','auth');
+   if(d.role==='boss') R(+2,'the boss, at work','abuse');
  }},
  {g:'closeness', w:'asks out', floor:1, s:'“Love is love.”', base:2, r(d,t,R){
    if(grown(d) && minor(t)) return R('=',7,'an adult asking out a minor: off the table');
    if(minor(d) && minor(t)) return R('=',1,'two kids: adorable');
    if(minor(d) && grown(t)) return R('=',3,'a kid asking out an adult: laughed off');
    if(d.role==='parent') return R('=',8,'their own child');
-   if(d.age==='old' && t.age==='adult') R(d.sex==='man' ? +3 : 0, d.sex==='man' ? 'an old man, a younger woman' : 'an older woman, a younger man: “good for her”','age');
-   if(d.role==='boss' || d.role==='teacher') R(+4,'asking out someone you have power over','auth');
-   if(t.role==='boss') R(+1,'asking out your boss','auth');
+   if(d.age==='old' && t.age==='adult') R(d.sex==='man' ? +3 : 0, d.sex==='man' ? 'an old man, a younger woman' : 'an older woman, a younger man: “good for her”','agegap');
+   if(d.role==='boss' || d.role==='teacher') R(+4,'asking out someone you have power over','abuse');
+   if(t.role==='boss') R(+1,'asking out your boss','defy');
    if(t.role==='famous') R(+1,'asking out a celebrity: laughed at','punch');
    if(d.role==='rich' && t.age==='adult' && d.age==='old') R(+1,'an old rich man and a young date: “gold digger,” aimed at her','punch');
    if(d.sex===t.sex && d.ori==='gay' && t.ori==='straight') R(0,'a gay person asking out a straight one: an honest mistake','ori');
@@ -444,22 +478,22 @@ const ACTS = [
    if(t.dis) R(+2,'staring at someone’s disability','dis');
    if(t.trans) R(+1,'staring at a trans person','gender');
    if(t.body==='heavy') R(+1,'staring at someone’s size','body');
-   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man staring at a woman','sex');
+   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man staring at a woman','harass');
    if(d.sex==='man' && grown(d) && minor(t)) R(+3,'a grown man staring at a kid','kids');
    if(d.age==='old') R(-2,'old people stare','age');
  }},
  {g:'closeness', w:'takes a photo of', after:'without asking', cx:'takes a photo of', s:'“Respect people’s privacy.”', base:4, r(d,t,R){
    if(t.role==='famous') R(-3,'a celebrity in public: that’s the deal','punch');
-   if(t.role==='cop') R(-2,'filming the police: protected','police');
+   if(t.role==='cop') R(-2,'filming the police: protected','film');
    if(minor(t) && grown(d) && d.role!=='parent') R(+3,'photographing someone else’s kid','kids');
    if(d.role==='parent') return R('=',0,'a parent, their own kid');
    if(t.role==='homeless') R(+2,'photographing someone on the street','punch');
    if(t.dis) R(+1,'photographing someone’s disability','dis');
-   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man photographing a woman','sex');
+   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+1,'a man photographing a woman','harass');
    if(d.age==='child') R(-2,'a kid with a phone','kids');
  }},
  {g:'closeness', w:'helps', after:'without being asked', cx:'helps, unasked', floor:1, s:'“Do unto others.”', base:2, r(d,t,R){
-   if(t.dis) R(+2,'grabbing a wheelchair or an arm without asking','dis');
+   if(t.dis) R(+2,'grabbing a wheelchair or an arm without asking','autonomy');
    if(t.age==='old') R(-1,'helping someone old: admired','age');
    if(d.sex==='man' && t.sex==='woman' && grown(t)) R(-1,'a man helping a woman: chivalry','chiv');
       if(d.age==='child') R(-1,'a kid helping','kids');
@@ -476,8 +510,8 @@ const ACTS = [
  {g:'closeness', w:'sits right next to', after:'on an empty bus', cx:'sits right next to', s:'“It’s a free country.”', base:4, r(d,t,R){
    if(d.age==='child') return R('=',2,'a kid wants company');
    if(d.age==='old' && d.sex==='woman') return R('=',2,'a grandma wants company');
-   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+2,'a man, next to a woman alone','sex');
-   if(d.sex==='woman') R(-2,'a woman, next to anyone','sex');
+   if(d.sex==='man' && t.sex==='woman' && grown(t)) R(+2,'a man, next to a woman alone','harass');
+   if(d.sex==='woman') R(-2,'a woman, next to anyone','harass');
       if(d.sex==='man' && grown(d) && minor(t)) R(+3,'a man, next to a kid alone','kids');
    if(d.role==='homeless') R(+1,'someone homeless, next to you','punch');
    if(d.role==='famous') R(-3,'a celebrity sits next to you: your lucky day','punch');
@@ -489,10 +523,11 @@ function judge(a, d, t, j){
   const W = JUDGES[j][2], why = []; let v = a.base, fixed = null;
   const R = (dx, x, y) => { if(dx === '='){ if(fixed === null){ fixed = x; why.push(['=', y, 1]); } return; } const m = W[y] ?? 1; v += dx * m; why.push([dx, x, m]); };
   a.r(d, t, R);
+  const gs = (JUDGES[j][3] || {})[a.g]; if(gs && fixed === null){ v += gs; why.push([gs, 'it’s just words', 1]); }
   let out = fixed;
   if(out === null){ out = Math.max(a.floor ?? 2, Math.min(a.cap ?? 7, Math.round(v)));
     // “laughed at” and “divided” are only ever said on purpose: a tally lands on a plain verdict
-    if(out === 3) out = 4; if(out === 5 && !a.split) out = 6; }
+    if(out === 3) out = 4; if(out === 5 && !(a.split && j === 0)) out = 6; }
   return {v:out, why};
 }
 
@@ -747,7 +782,142 @@ function drawMap(){
 }
 ['mAct','mDim','mJ'].forEach(id => $(id).onchange = drawMap);
 
-function show(w){ for(const [id, t] of [['B','tB'],['C','tC'],['M','tM']]){ $(id).hidden = id !== w; $(t).setAttribute('aria-pressed', id === w); } if(w === 'B') drawB(); if(w === 'C') drawC(); if(w === 'M'){ if(S.a !== null) $('mAct').value = S.a; drawMap(); } }
+
+// ---------- web of norms ----------
+// A norm = one act with one set of reasons. Every sentence lands on exactly one; 88,992 sentences make about 1,400 norms.
+const sigOf = why => why.map(w => w[1]).sort().join('|');
+const WEB = (() => {
+  let ready = false, building = false, byAct = [], leaves = [], actsN = [], groupsN = [], R1 = 0, R2 = 0, R3 = 0;
+  let mine = null, cam = {s:.3, x:0, y:0}, J = 0, focus = null, hover = null, nbrs = [], pulse0 = 0, raf = 0, fly = null, onReady = [];
+  const cv = $('wc'), ctx = cv.getContext('2d'), box = $('wbox'); let Wd = 0, Ht = 0, dpr = 1, colKey = '', COL = {};
+  function people(ai, side){
+    const a = ACTS[ai], r = relOf(ai), need = a.need || {}, ks = r[side], out = [];
+    const rec = (p, i) => { if(i === DIMS.length){ out.push(p); return; } const dm = DIMS[i];
+      const req = side === 't' && need.t === dm.k; if(!req) rec(p, i + 1);
+      if((ks.has(dm.k) || req) && dimOk(dm.k, p)) for(const v of dm.vals) rec({...p, [dm.k]: v}, i + 1); };
+    for(const ag of AGE) for(const x of SEX){ if(side === 't' && need.tAge === 'minor' && !minor({age:ag})) continue; rec(blankP(ag, x), 0); }
+    return out;
+  }
+  function enumAct(ai){
+    const a = ACTS[ai], D = people(ai, 'd'), T = people(ai, 't'), map = new Map();
+    for(const d of D) for(const t of T){ const r = judge(a, d, t, 0), key = sigOf(r.why); let n = map.get(key);
+      if(!n){ n = {ai, key, why:r.why, count:0, d, t}; map.set(key, n); } n.count++; }
+    const list = [...map.values()]; list.forEach(n => n.v = JUDGES.map((_, j) => judge(a, n.d, n.t, j).v));
+    list.sort((x, y) => x.v[0] - y.v[0] || y.count - x.count); byAct[ai] = list;
+  }
+  function layout(){
+    const groups = [...new Set(ACTS.map(a => a.g))], LEAF = 5.2, PA = 7, PG = 16; let slot = 0; const pos = [];
+    groups.forEach(g => { const gs = slot; ACTS.forEach((a, ai) => { if(a.g !== g) return; const as = slot; byAct[ai].forEach(n => { n.slot = slot++; leaves.push(n); }); actsN[ai] = {ai, s0:as, s1:slot - 1}; slot += PA; }); groupsN.push({g, s0:gs, s1:slot - PA - 1}); slot += PG - PA; });
+    const total = slot, ang = k => k / total * Math.PI * 2 - Math.PI / 2;
+    R3 = total * LEAF / (Math.PI * 2); R2 = R3 * .6; R1 = R3 * .27;
+    leaves.forEach(n => { n.a = ang(n.slot); n.x = Math.cos(n.a) * R3; n.y = Math.sin(n.a) * R3; n.r = Math.min(9, 1.6 + Math.sqrt(n.count) * .32); });
+    actsN.forEach(an => { an.a = ang((an.s0 + an.s1) / 2); an.x = Math.cos(an.a) * R2; an.y = Math.sin(an.a) * R2; an.cx = Math.cos(an.a) * (R2 + R3) / 2; an.cy = Math.sin(an.a) * (R2 + R3) / 2; });
+    groupsN.forEach(gn => { gn.a = ang((gn.s0 + gn.s1) / 2); gn.x = Math.cos(gn.a) * R1; gn.y = Math.sin(gn.a) * R1; });
+  }
+  function build(cb){
+    if(ready) return cb && cb(); if(cb) onReady.push(cb); if(building) return; building = true;
+    let ai = 0; const step = () => { const t0 = performance.now(); while(ai < ACTS.length && performance.now() - t0 < 24) enumAct(ai++);
+      $('wmsg').textContent = 'weaving the web… ' + Math.round(ai / ACTS.length * 100) + '%';
+      if(ai < ACTS.length) return setTimeout(step, 0);
+      layout(); ready = true; $('wmsg').textContent = ''; fit(true); info(); onReady.splice(0).forEach(f => f()); };
+    setTimeout(step, 30);
+  }
+  function colors(){
+    const key = (document.documentElement.dataset.theme || '') + matchMedia('(prefers-color-scheme:dark)').matches; if(key === colKey) return; colKey = key;
+    const cs = getComputedStyle(document.documentElement); COL = {ink:cs.getPropertyValue('--ink').trim(), dim:cs.getPropertyValue('--dim').trim(), faint:cs.getPropertyValue('--faint').trim(), bg:cs.getPropertyValue('--bg').trim(), v:[]};
+    const probe = el('span'); probe.style.display = 'none'; document.body.appendChild(probe);
+    for(let i = 0; i < 9; i++){ probe.className = 'v' + i; COL.v[i] = getComputedStyle(probe).getPropertyValue('--vc').trim(); } probe.remove();
+  }
+  function size(){ const r = box.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1); if(r.width !== Wd || r.height !== Ht){ Wd = r.width; Ht = r.height; cv.width = Wd * dpr; cv.height = Ht * dpr; } }
+  const toW = (sx, sy) => [(sx - Wd / 2 - cam.x) / cam.s, (sy - Ht / 2 - cam.y) / cam.s];
+  function draw(){
+    raf = 0; if(!ready || $('W').hidden) return; size(); colors();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, Wd, Ht);
+    ctx.save(); ctx.translate(Wd / 2 + cam.x, Ht / 2 + cam.y); ctx.scale(cam.s, cam.s);
+    const px = 1 / cam.s, [x0, y0] = toW(-40, -40), [x1, y1] = toW(Wd + 40, Ht + 40), vis = n => n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1;
+    const path = focus ? focus : hover;
+    // trunk: center → groups → acts
+    ctx.lineWidth = px; ctx.strokeStyle = COL.faint; ctx.beginPath();
+    groupsN.forEach(gn => { ctx.moveTo(0, 0); ctx.lineTo(gn.x, gn.y); });
+    actsN.forEach(an => { const gn = groupsN.find(g => g.g === ACTS[an.ai].g); ctx.moveTo(gn.x, gn.y); ctx.quadraticCurveTo(Math.cos(an.a) * (R1 + R2) / 2, Math.sin(an.a) * (R1 + R2) / 2, an.x, an.y); });
+    ctx.stroke();
+    // threads: act → norm, in the norm's color
+    ctx.lineWidth = px * .8; ctx.globalAlpha = path ? .1 : .22;
+    for(let v = 0; v < 9; v++){ ctx.strokeStyle = COL.v[v]; ctx.beginPath(); leaves.forEach(n => { if(n.v[J] !== v) return; const an = actsN[n.ai]; ctx.moveTo(an.x, an.y); ctx.quadraticCurveTo(an.cx, an.cy, n.x, n.y); }); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    // the lit path
+    if(path){ const an = actsN[path.ai], gn = groupsN.find(g => g.g === ACTS[path.ai].g);
+      ctx.lineWidth = px * 2.2; ctx.strokeStyle = COL.ink; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(gn.x, gn.y); ctx.quadraticCurveTo(Math.cos(an.a) * (R1 + R2) / 2, Math.sin(an.a) * (R1 + R2) / 2, an.x, an.y); ctx.quadraticCurveTo(an.cx, an.cy, path.x, path.y); ctx.stroke();
+      if(focus){ ctx.lineWidth = px * 1.2; ctx.setLineDash([4 * px, 4 * px]); ctx.strokeStyle = COL.dim; ctx.beginPath(); nbrs.forEach(m => { ctx.moveTo(focus.x, focus.y); const mx = (focus.x + m.x) / 2 * .93, my = (focus.y + m.y) / 2 * .93; ctx.quadraticCurveTo(mx, my, m.x, m.y); }); ctx.stroke(); ctx.setLineDash([]); } }
+    // norms
+    leaves.forEach(n => { if(!vis(n)) return; ctx.fillStyle = COL.v[n.v[J]]; ctx.beginPath(); ctx.arc(n.x, n.y, Math.max(n.r, 1.4 * px), 0, 7); ctx.fill(); });
+    // pulse around the neighbors
+    const t = (performance.now() - pulse0) / 1000;
+    if(focus){ ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.6 * px; ctx.beginPath(); ctx.arc(focus.x, focus.y, focus.r + 5 * px, 0, 7); ctx.stroke();
+      if(t < 3.2){ const k = (t % .8) / .8; ctx.globalAlpha = 1 - k; ctx.lineWidth = px; nbrs.forEach(m => { ctx.beginPath(); ctx.arc(m.x, m.y, m.r + (3 + k * 12) * px, 0, 7); ctx.stroke(); }); ctx.globalAlpha = 1; } }
+    if(hover && hover !== focus){ ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.2 * px; ctx.beginPath(); ctx.arc(hover.x, hover.y, hover.r + 4 * px, 0, 7); ctx.stroke(); }
+    // labels, at a fixed screen size
+    ctx.textBaseline = 'middle'; const F = s => s / cam.s + 'px "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif';
+    ctx.fillStyle = COL.dim; ctx.textAlign = 'center'; ctx.font = F(13); ctx.fillText('norms', 0, 0);
+    groupsN.forEach(gn => { ctx.font = F(14); ctx.fillStyle = COL.ink; const w = ctx.measureText(gn.g).width; ctx.fillStyle = COL.bg; ctx.fillRect(gn.x - w / 2 - 4 * px, gn.y - 9 * px, w + 8 * px, 18 * px); ctx.fillStyle = COL.ink; ctx.fillText(gn.g, gn.x, gn.y); });
+    const placed = []; if(cam.s > .16) actsN.forEach(an => { if(!vis(an)) return; const lab = ACTS[an.ai].cx || ACTS[an.ai].w; ctx.font = F(12.5); const w = ctx.measureText(lab).width;
+      const sx = an.x * cam.s, sy = an.y * cam.s, sw = w * cam.s; const lit = path && path.ai === an.ai; if(!lit && placed.some(q => Math.abs(q[1] - sy) < 16 && Math.abs(q[0] - sx) < (q[2] + sw) / 2 + 6)) return; placed.push([sx, sy, sw]); ctx.fillStyle = COL.bg; ctx.globalAlpha = .85; ctx.fillRect(an.x - w / 2 - 3 * px, an.y - 8 * px, w + 6 * px, 16 * px); ctx.globalAlpha = 1; ctx.fillStyle = path && path.ai === an.ai ? COL.ink : COL.dim; ctx.fillText(lab, an.x, an.y); });
+    const lab1 = new Set(focus ? [focus, ...nbrs] : hover ? [hover] : []);
+    if(cam.s > .6){ ctx.font = F(11); ctx.fillStyle = COL.dim; leaves.forEach(n => { if(!vis(n) || (cam.s < 2.8 && !lab1.has(n))) return; ctx.fillStyle = lab1.has(n) ? COL.ink : COL.dim; const lab = V[n.v[J]] + ' · ' + n.count; ctx.save(); ctx.translate(n.x, n.y); let a = n.a; const flip = Math.cos(a) < 0; ctx.rotate(flip ? a + Math.PI : a); ctx.textAlign = flip ? 'right' : 'left'; ctx.fillText(lab, flip ? -(n.r + 6 * px) : n.r + 6 * px, 0); ctx.restore(); }); }
+    ctx.restore();
+    if(fly || (focus && t < 3.2)) raf = requestAnimationFrame(stepAnim);
+  }
+  function stepAnim(){ if(fly){ const k = Math.min(1, (performance.now() - fly.t0) / fly.ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      const lerp = (a, b) => a + (b - a) * e; const s = Math.exp(lerp(Math.log(fly.a.s), Math.log(fly.b.s))); cam = {s, x: lerp(fly.a.wx, fly.b.wx) * -s, y: lerp(fly.a.wy, fly.b.wy) * -s};
+      if(k >= 1){ fly = null; pulse0 = performance.now(); } } draw(); }
+  const req = () => { if(!raf) raf = requestAnimationFrame(draw); };
+  function flyTo(wx, wy, s, ms = 1100){ const cur = {s:cam.s, wx:-cam.x / cam.s, wy:-cam.y / cam.s}; fly = {a:cur, b:{s, wx, wy}, t0:performance.now(), ms}; cancelAnimationFrame(raf); raf = requestAnimationFrame(stepAnim); }
+  function fit(now){ size(); const s = Math.min(Wd, Ht) / (2 * R3 + 160); if(now){ cam = {s, x:0, y:0}; req(); } else flyTo(0, 0, s, 800); }
+  function neighbors(n){ const mine = new Set(n.why.map(w => w[1])); return byAct[n.ai].filter(m => { if(m === n) return false; const other = m.why.map(w => w[1]); let diff = 0; for(const x of other) if(!mine.has(x)) diff++; for(const x of mine) if(!other.includes(x)) diff++; return diff === 1; }); }
+  function sentence(n){ const a = ACTS[n.ai]; return describe(n.d, true) + ' ' + a.w + ' ' + describe(n.t) + (a.after ? ' ' + a.after : '') + '.'; }
+  function info(){
+    const I = $('winfo'), n = focus || hover;
+    if(!n){ I.innerHTML = `<div class="wi">${leaves.length.toLocaleString()} norms, woven from ${leaves.reduce((x, n) => x + n.count, 0).toLocaleString()} sentences. Each dot is one act with one set of reasons; its color is the verdict, its size how many sentences land on it. The thread runs back through the act to its group. Scroll or pinch to zoom, drag to move, point at a dot to read it, click to hold it.</div>`; return; }
+    const a = ACTS[n.ai], v = n.v[J];
+    I.innerHTML = `<div class="ws"></div><div class="wv v${v}"></div><div class="wm"></div><div class="wr"></div><div class="wb"></div>`;
+    I.querySelector('.ws').textContent = mine && focus === n ? mine : sentence(n); I.querySelector('.wv').textContent = V[v] + (J ? ', to ' + JUDGES[J][0] : '');
+    I.querySelector('.wm').textContent = (mine && focus === n ? 'Your sentence. ' : '') + (n.count > 1 ? 'One of ' + n.count.toLocaleString() + ' sentences on this norm' : 'The only sentence on this norm') + (focus === n && nbrs.length ? ' · ' + nbrs.length + ' norm' + (nbrs.length > 1 ? 's are' : ' is') + ' one reason away (pulsing)' : '');
+    const W2 = I.querySelector('.wr'); if(!n.why.length) W2.textContent = 'No reasons: between two people, nothing more said, it’s “' + V[a.base] + '.”';
+    n.why.forEach(([dx, y]) => { const r = el('div'); r.textContent = (dx === '=' ? '■ ' : dx > 0 ? '↑ ' : dx < 0 ? '↓ ' : '· ') + y; W2.appendChild(r); });
+    if(focus === n){ const B = I.querySelector('.wb'); const o = el('button', '', 'open in build'); o.onclick = () => { S = {d:{...n.d}, t:{...n.t}, a:n.ai, j:J, open:null}; show('B'); }; B.appendChild(o);
+      const c = el('button', '', 'let go'); c.onclick = () => { focus = null; nbrs = []; info(); req(); }; B.appendChild(c); }
+  }
+  function setFocus(n, flyIn, own){ mine = own || null; focus = n; nbrs = n ? neighbors(n) : []; pulse0 = performance.now(); info(); if(n && flyIn) flyTo(n.x, n.y, Math.max(cam.s, 1.7)); else req(); }
+  function hit(sx, sy){ const [wx, wy] = toW(sx, sy); let best = null, bd = 1e9; const tol = 9 / cam.s; for(const n of leaves){ const d = Math.hypot(n.x - wx, n.y - wy) - n.r; if(d < tol && d < bd){ bd = d; best = n; } } return best; }
+  // pointer: drag to pan, wheel and pinch to zoom, tap to hold
+  const pts = new Map(); let moved = 0, last = null, pinch = null;
+  box.addEventListener('pointerdown', e => { box.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.offsetX, e.offsetY]); moved = 0; last = [e.offsetX, e.offsetY]; fly = null; box.classList.add('drag');
+    if(pts.size === 2){ const [a, b] = [...pts.values()]; pinch = {d:Math.hypot(a[0] - b[0], a[1] - b[1]), s:cam.s}; } });
+  box.addEventListener('pointermove', e => {
+    if(!pts.has(e.pointerId)){ const h = ready ? hit(e.offsetX, e.offsetY) : null; if(h !== hover){ hover = h; box.classList.toggle('pt', !!h); if(!focus) info(); req(); } return; }
+    pts.set(e.pointerId, [e.offsetX, e.offsetY]);
+    if(pts.size === 2 && pinch){ const [a, b] = [...pts.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); zoomAt((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, pinch.s * d / pinch.d / cam.s); moved = 99; return; }
+    const dx = e.offsetX - last[0], dy = e.offsetY - last[1]; moved += Math.abs(dx) + Math.abs(dy); cam.x += dx; cam.y += dy; last = [e.offsetX, e.offsetY]; req(); });
+  const up = e => { pts.delete(e.pointerId); if(pts.size < 2) pinch = null; box.classList.remove('drag'); if(moved < 5 && ready && e.type === 'pointerup'){ const h = hit(e.offsetX, e.offsetY); if(h){ SND.pop(); setFocus(h === focus ? null : h, false); } } };
+  box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+  box.addEventListener('pointerleave', () => { if(hover){ hover = null; box.classList.remove('pt'); if(!focus) info(); req(); } });
+  function zoomAt(sx, sy, f){ const ns = Math.max(.05, Math.min(9, cam.s * f)); f = ns / cam.s; cam.x = (cam.x - (sx - Wd / 2)) * f + (sx - Wd / 2); cam.y = (cam.y - (sy - Ht / 2)) * f + (sy - Ht / 2); cam.s = ns; req(); }
+  box.addEventListener('wheel', e => { e.preventDefault(); fly = null; zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * .0016)); }, {passive:false});
+  $('wzi').onclick = () => zoomAt(Wd / 2, Ht / 2, 1.6); $('wzo').onclick = () => zoomAt(Wd / 2, Ht / 2, 1 / 1.6); $('wfit').onclick = () => fit(false);
+  addEventListener('resize', req); $('thm').addEventListener('click', () => { colKey = ''; req(); });
+  const jw = $('wj'); function judges(){ jw.innerHTML = ''; JUDGES.forEach(([n, dsc], i) => { const b = el('button', '', n); b.title = dsc; b.setAttribute('aria-pressed', i === J); b.onclick = () => { J = i; SND.pop(); judges(); info(); req(); }; jw.appendChild(b); }); }
+  judges();
+  return {
+    open(){ size(); build(); req(); },
+    findAndFly(ai, d, t, j){ J = j; judges(); build(() => { const key = sigOf(judge(ACTS[ai], d, t, 0).why); const n = byAct[ai].find(m => m.key === key);
+      if(!n) return; const a = ACTS[ai]; fit(true); setTimeout(() => setFocus(n, true, describe(d, true) + ' ' + a.w + ' ' + describe(t) + (a.after ? ' ' + a.after : '') + '.'), 60); }); },
+  };
+})();
+
+function show(w){ for(const [id, t] of [['B','tB'],['C','tC'],['M','tM'],['W','tW']]){ $(id).hidden = id !== w; $(t).setAttribute('aria-pressed', id === w); } if(w === 'B') drawB(); if(w === 'C') drawC(); if(w === 'M'){ if(S.a !== null) $('mAct').value = S.a; drawMap(); } if(w === 'W') WEB.open(); }
+$('tW').onclick = () => show('W');
+$('toweb').onclick = () => { show('W'); WEB.findAndFly(S.a, S.d, S.t, S.j); };
+$('ctoweb').onclick = () => { show('W'); WEB.findAndFly(C.a, C.d, C.t, C.j); };
 $('tB').onclick = () => show('B'); $('tC').onclick = () => show('C'); $('tM').onclick = () => show('M');
 $('reset').onclick = () => { S = blank(); C = {d:blankP('adult', 'woman'), a:0, t:blankP('adult', 'man'), j:0}; lastV = null; SND.pop(); show('B'); };
 drawB();
