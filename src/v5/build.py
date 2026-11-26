@@ -11,8 +11,8 @@ for gi,g in enumerate(P):
                 units.append({'it':iid,'g':s['t'],'said':said,'v':k['qv'],'f':k['f'],'mv':k.get('mv',[]),'c':k.get('c',k['f'])})
     tree.append(G)
 VD=['expected','admired','fine','laughed at','eyebrows','divided','frowned on','not okay','illegal']
-site={'tree':tree,'units':units,'noun':['case','cases'],'VD':VD,'by':'group','PANEL':False,'LINKS':[['Outline view →','outline.html'],['Granular view →','granular.html']],
- 'INTRO':'The rule people say, and the one they follow. Hollow dots: groups who disagree (hover a row). Also as an <a href="outline.html">outline</a> and in <a href="granular.html">granular</a> detail.'}
+site={'tree':tree,'units':units,'noun':['case','cases'],'VD':VD,'by':'group','PANEL':False,'TABS':[['Dictionary','./'],['Outline','outline.html'],['Granular','granular.html']],
+ 'INTRO':'The rule people say, and the one they follow. Hollow dots: groups who disagree (hover a row).'}
 theme=r'''
 :root{--bg:#f2ead8;--fg:#251c12;--fg2:#3b2f20;--dim:#6b5b43;--line:#d8c9aa;--line2:#e4d8bf;--acc:#8b1a1a;--hov:#ebe1ca;--sel:#e7d9ba;--hl:#f3d36b;--panel:#f6efe0;--bar:#f2ead8;
 --display:"IM Fell English",serif;--text:"EB Garamond",Garamond,serif;--label:"IM Fell English SC","EB Garamond",serif;
